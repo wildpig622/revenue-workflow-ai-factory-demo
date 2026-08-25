@@ -1,0 +1,262 @@
+{
+  "analysisVersion": "0.2",
+  "sourceTitle": "高热日期收益决策循环",
+  "domain": "hotel_revenue_management",
+  "reviewStatus": "awaiting_business_review",
+  "method": "hotel_revenue_rules",
+  "methodNotice": "当前使用本地酒旅收益领域规则形成初步建议；接口已支持替换为企业 AI，无论使用哪种引擎，结果都必须由收益负责人复核。",
+  "analysisEngine": {
+    "id": "hotel_revenue_rules",
+    "name": "酒旅收益领域规则",
+    "usesExternalAI": false,
+    "fallbackReason": null
+  },
+  "summary": {
+    "totalSteps": 12,
+    "automationCandidates": 5,
+    "aiAssisted": 5,
+    "humanRequired": 1,
+    "toolIntegration": 1,
+    "dataGapCount": 4,
+    "automationCandidateRate": 42
+  },
+  "steps": [
+    {
+      "stepId": "STEP-01",
+      "order": 1,
+      "originalText": "每天早上检查负责门店未来经营日期",
+      "category": "observation",
+      "label": "自动观察循环",
+      "automationLevel": "可定时自动化",
+      "executorType": "data_query",
+      "nodeType": "observation",
+      "rationale": "该步骤是按时间周期重复查看指标变化，适合由调度与数据查询自动完成。",
+      "prerequisite": "需要刷新频率、结束条件和异常通知规则。",
+      "owner": "收益经理 / 数据负责人"
+    },
+    {
+      "stepId": "STEP-02",
+      "order": 2,
+      "originalText": "拉取未来7天的 OCC、Pickup、剩余库存和房型结构",
+      "category": "data_query",
+      "label": "数据自动化",
+      "automationLevel": "可自动化",
+      "executorType": "data_query",
+      "nodeType": "action",
+      "rationale": "该步骤以查询、采集或整理数据为主，适合交由系统稳定处理。",
+      "prerequisite": "需要稳定数据源、字段口径和访问权限。",
+      "owner": "数据 / 系统负责人"
+    },
+    {
+      "stepId": "STEP-03",
+      "order": 3,
+      "originalText": "按 OCC、提前期和剩余库存筛选可能异常高热的日期",
+      "category": "rule_engine",
+      "label": "规则自动化",
+      "automationLevel": "可自动化（需确认规则）",
+      "executorType": "rule_engine",
+      "nodeType": "action",
+      "rationale": "该步骤可用明确阈值或判定规则稳定执行。",
+      "prerequisite": "需要业务负责人确认阈值、边界和异常处理。",
+      "owner": "收益策略负责人"
+    },
+    {
+      "stepId": "STEP-04",
+      "order": 4,
+      "originalText": "查看订单结构，判断高 OCC 是否由协议客、团单或特殊订单导致",
+      "category": "ai_assist",
+      "label": "AI 辅助判断",
+      "automationLevel": "AI 建议 + 人工复核",
+      "executorType": "llm",
+      "nodeType": "decision",
+      "rationale": "该步骤需要综合多类信息形成诊断或建议，适合 AI 辅助而非直接替代业务责任。",
+      "prerequisite": "需要准备判断标准、历史案例和人工复核机制。",
+      "owner": "收益经理 / AI 应用负责人"
+    },
+    {
+      "stepId": "STEP-05",
+      "order": 5,
+      "originalText": "查询约10家竞对的价格、库存和周边需求事件",
+      "category": "data_query",
+      "label": "数据自动化",
+      "automationLevel": "可自动化",
+      "executorType": "data_query",
+      "nodeType": "action",
+      "rationale": "该步骤以查询、采集或整理数据为主，适合交由系统稳定处理。",
+      "prerequisite": "需要稳定数据源、字段口径和访问权限。",
+      "owner": "数据 / 系统负责人"
+    },
+    {
+      "stepId": "STEP-06",
+      "order": 6,
+      "originalText": "综合订单结构、竞对表现和活动信息，判断是否属于真实市场高热",
+      "category": "ai_assist",
+      "label": "AI 辅助判断",
+      "automationLevel": "AI 建议 + 人工复核",
+      "executorType": "llm",
+      "nodeType": "decision",
+      "rationale": "该步骤需要综合多类信息形成诊断或建议，适合 AI 辅助而非直接替代业务责任。",
+      "prerequisite": "需要准备判断标准、历史案例和人工复核机制。",
+      "owner": "收益经理 / AI 应用负责人"
+    },
+    {
+      "stepId": "STEP-07",
+      "order": 7,
+      "originalText": "形成涨价或保持观察的策略建议",
+      "category": "ai_assist",
+      "label": "AI 辅助判断",
+      "automationLevel": "AI 建议 + 人工复核",
+      "executorType": "llm",
+      "nodeType": "decision",
+      "rationale": "该步骤需要综合多类信息形成诊断或建议，适合 AI 辅助而非直接替代业务责任。",
+      "prerequisite": "需要准备判断标准、历史案例和人工复核机制。",
+      "owner": "收益经理 / AI 应用负责人"
+    },
+    {
+      "stepId": "STEP-08",
+      "order": 8,
+      "originalText": "由收益经理人工确认市场高热判断与价格调整幅度",
+      "category": "human_gate",
+      "label": "人工决策门禁",
+      "automationLevel": "必须保留人工",
+      "executorType": "human",
+      "nodeType": "decision",
+      "rationale": "该步骤涉及经营责任、高风险决策或未量化经验，不应直接自动执行。",
+      "prerequisite": "需要明确审批人、可选项、超时处理和审计记录。",
+      "owner": "收益经理 / 业务负责人"
+    },
+    {
+      "stepId": "STEP-09",
+      "order": 9,
+      "originalText": "确认后执行价格调整",
+      "category": "system_action",
+      "label": "系统动作",
+      "automationLevel": "工具执行（MVP 人工确认）",
+      "executorType": "api_tool",
+      "nodeType": "action",
+      "rationale": "该步骤是对业务系统的真实变更，技术上可通过工具执行，但必须受权限和审批控制。",
+      "prerequisite": "需要调价接口、操作权限、价格底线和回滚方案。",
+      "owner": "收益经理 / 系统负责人"
+    },
+    {
+      "stepId": "STEP-10",
+      "order": 10,
+      "originalText": "一小时后重新观察 Pickup、取消、剩余库存和竞对价格变化",
+      "category": "observation",
+      "label": "自动观察循环",
+      "automationLevel": "可定时自动化",
+      "executorType": "data_query",
+      "nodeType": "observation",
+      "rationale": "该步骤是按时间周期重复查看指标变化，适合由调度与数据查询自动完成。",
+      "prerequisite": "需要刷新频率、结束条件和异常通知规则。",
+      "owner": "收益经理 / 数据负责人"
+    },
+    {
+      "stepId": "STEP-11",
+      "order": 11,
+      "originalText": "评估价格试探是否成功，决定继续上探、保持观察或价格回调",
+      "category": "evaluation",
+      "label": "效果评估与复盘",
+      "automationLevel": "自动汇总 + 人工复盘",
+      "executorType": "human",
+      "nodeType": "evaluation",
+      "rationale": "该步骤需要汇总效果并将经验返回下一轮策略。",
+      "prerequisite": "需要统一 RP、ADR、OCC 等效果口径和复盘责任人。",
+      "owner": "收益经理"
+    },
+    {
+      "stepId": "STEP-12",
+      "order": 12,
+      "originalText": "直到目标日期结束后，记录最终 RP、ADR、OCC 和满房时间并完成复盘",
+      "category": "evaluation",
+      "label": "效果评估与复盘",
+      "automationLevel": "自动汇总 + 人工复盘",
+      "executorType": "human",
+      "nodeType": "evaluation",
+      "rationale": "该步骤需要汇总效果并将经验返回下一轮策略。",
+      "prerequisite": "需要统一 RP、ADR、OCC 等效果口径和复盘责任人。",
+      "owner": "收益经理"
+    }
+  ],
+  "dataGaps": [
+    {
+      "gap": "竞对数据来源与口径",
+      "why": "需要确认竞对价格、库存的稳定数据源和刷新频率。",
+      "owner": "数据 / 产品负责人"
+    },
+    {
+      "gap": "高热与异常筛选阈值",
+      "why": "OCC、Pickup、提前期等阈值尚需按门店与场景确认。",
+      "owner": "收益策略负责人"
+    },
+    {
+      "gap": "市场高热判断标准与历史案例",
+      "why": "AI 可以综合信息提供建议，但需要明确判断标准和业务复核样本。",
+      "owner": "收益经理"
+    },
+    {
+      "gap": "调价接口、权限与回滚机制",
+      "why": "真实改价属于高风险系统动作，MVP 阶段建议保留人工确认。",
+      "owner": "收益经理 / 系统负责人"
+    }
+  ],
+  "categoryOptions": [
+    {
+      "value": "data_query",
+      "label": "数据自动化",
+      "automationLevel": "可自动化",
+      "rationale": "该步骤以查询、采集或整理数据为主，适合交由系统稳定处理。",
+      "prerequisite": "需要稳定数据源、字段口径和访问权限。",
+      "owner": "数据 / 系统负责人"
+    },
+    {
+      "value": "rule_engine",
+      "label": "规则自动化",
+      "automationLevel": "可自动化（需确认规则）",
+      "rationale": "该步骤可用明确阈值或判定规则稳定执行。",
+      "prerequisite": "需要业务负责人确认阈值、边界和异常处理。",
+      "owner": "收益策略负责人"
+    },
+    {
+      "value": "ai_assist",
+      "label": "AI 辅助判断",
+      "automationLevel": "AI 建议 + 人工复核",
+      "rationale": "该步骤需要综合多类信息形成诊断或建议，适合 AI 辅助而非直接替代业务责任。",
+      "prerequisite": "需要准备判断标准、历史案例和人工复核机制。",
+      "owner": "收益经理 / AI 应用负责人"
+    },
+    {
+      "value": "human_gate",
+      "label": "人工决策门禁",
+      "automationLevel": "必须保留人工",
+      "rationale": "该步骤涉及经营责任、高风险决策或未量化经验，不应直接自动执行。",
+      "prerequisite": "需要明确审批人、可选项、超时处理和审计记录。",
+      "owner": "收益经理 / 业务负责人"
+    },
+    {
+      "value": "system_action",
+      "label": "系统动作",
+      "automationLevel": "工具执行（MVP 人工确认）",
+      "rationale": "该步骤是对业务系统的真实变更，技术上可通过工具执行，但必须受权限和审批控制。",
+      "prerequisite": "需要调价接口、操作权限、价格底线和回滚方案。",
+      "owner": "收益经理 / 系统负责人"
+    },
+    {
+      "value": "observation",
+      "label": "自动观察循环",
+      "automationLevel": "可定时自动化",
+      "rationale": "该步骤是按时间周期重复查看指标变化，适合由调度与数据查询自动完成。",
+      "prerequisite": "需要刷新频率、结束条件和异常通知规则。",
+      "owner": "收益经理 / 数据负责人"
+    },
+    {
+      "value": "evaluation",
+      "label": "效果评估与复盘",
+      "automationLevel": "自动汇总 + 人工复盘",
+      "rationale": "该步骤需要汇总效果并将经验返回下一轮策略。",
+      "prerequisite": "需要统一 RP、ADR、OCC 等效果口径和复盘责任人。",
+      "owner": "收益经理"
+    }
+  ],
+  "nextAction": "请收益负责人逐步复核分类，签名确认后再生成 Workflow、候选策略集和质量门禁结果。"
+}

@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Revenue Workflow AI Factory · 比赛导览</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #eef3f6;
+      --surface: #ffffff;
+      --soft: #f6f8fa;
+      --ink: #142432;
+      --muted: #617181;
+      --line: #d9e2e9;
+      --navy: #123e5d;
+      --navy-2: #082d45;
+      --blue: #2478a8;
+      --blue-soft: #e6f2f9;
+      --green: #17643b;
+      --green-soft: #e0f3e7;
+      --amber: #7a5700;
+      --amber-soft: #fff0c5;
+      --red: #9a3028;
+      --red-soft: #fee5e1;
+      --shadow: 0 22px 65px rgba(23, 48, 67, .11);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --bg: #0d141a;
+        --surface: #141d25;
+        --soft: #10181f;
+        --ink: #edf3f7;
+        --muted: #9cabb7;
+        --line: #2c3943;
+        --navy: #8bc3e5;
+        --navy-2: #afd9f0;
+        --blue: #8acbf0;
+        --blue-soft: #183243;
+        --green: #91dfb2;
+        --green-soft: #173629;
+        --amber: #ffd77a;
+        --amber-soft: #3c2f0d;
+        --red: #ffb5af;
+        --red-soft: #452426;
+        --shadow: 0 22px 65px rgba(0, 0, 0, .34);
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; min-width: 320px; color: var(--ink); background: var(--bg); font-family: Inter, "Segoe UI", "Microsoft YaHei", sans-serif; line-height: 1.6; }
+    h1, h2, h3, p { margin: 0; }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible { outline: 3px solid color-mix(in srgb, var(--blue) 35%, transparent); outline-offset: 3px; }
+    .muted { color: var(--muted); }
+    .small { font-size: .82rem; }
+    .app-header { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 72px; padding: 12px max(20px, calc((100% - 1200px) / 2)); background: color-mix(in srgb, var(--surface) 94%, transparent); border-bottom: 1px solid var(--line); backdrop-filter: blur(15px); }
+    .brand, .header-actions, .nav, .hero-actions, .section-head, .status-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .logo { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; color: #fff; background: linear-gradient(145deg, #217cac, #0d3853); font-weight: 850; box-shadow: 0 8px 22px rgba(18, 62, 93, .25); }
+    .brand h1 { font-size: 1.02rem; }
+    .brand p { color: var(--muted); font-size: .78rem; }
+    .nav a { padding: 7px 10px; color: var(--muted); border-radius: 9px; font-size: .83rem; font-weight: 750; }
+    .nav a:hover { background: var(--soft); }
+    .nav a.active { color: var(--navy); background: var(--blue-soft); }
+    .version { color: var(--muted); font-size: .79rem; }
+    main { width: min(1200px, calc(100% - 32px)); margin: 28px auto 60px; }
+    .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr); gap: 34px; align-items: center; overflow: hidden; min-height: 455px; padding: clamp(28px, 5vw, 58px); color: #fff; background: linear-gradient(135deg, #082d45 0%, #124d70 63%, #2478a8 100%); border-radius: 26px; box-shadow: var(--shadow); }
+    .hero::after { content: ""; position: absolute; right: -110px; bottom: -190px; width: 430px; height: 430px; border: 68px solid rgba(255,255,255,.07); border-radius: 50%; }
+    .hero-copy, .hero-proof { position: relative; z-index: 1; }
+    .eyebrow { color: var(--blue); font-size: .74rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+    .hero .eyebrow { color: #bde4f8; }
+    .hero h2 { max-width: 760px; margin: 10px 0 15px; font-size: clamp(2rem, 4.5vw, 3.65rem); line-height: 1.12; letter-spacing: -.025em; }
+    .hero-lead { max-width: 740px; color: #dcebf4; font-size: clamp(.98rem, 1.5vw, 1.12rem); }
+    .hero-actions { margin-top: 27px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 45px; padding: 10px 15px; border: 1px solid rgba(255,255,255,.35); border-radius: 11px; font-size: .88rem; font-weight: 780; }
+    .button.primary { color: #103a55; background: #fff; border-color: #fff; }
+    .button:hover { transform: translateY(-1px); }
+    .hero-proof { display: grid; gap: 11px; }
+    .proof-card { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 12px; align-items: center; padding: 15px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); border-radius: 15px; backdrop-filter: blur(7px); }
+    .proof-mark { display: grid; place-items: center; width: 42px; height: 42px; color: #103a55; background: #fff; border-radius: 12px; font-weight: 850; }
+    .proof-card strong { display: block; font-size: .92rem; }
+    .proof-card span { color: #d9eaf3; font-size: .78rem; }
+    .trust-note { margin: 14px 4px 0; color: #c7deea; font-size: .78rem; }
+    .section { margin-top: 26px; }
+    .section-head { justify-content: space-between; align-items: end; margin-bottom: 12px; }
+    .section-head h2 { margin-top: 4px; font-size: clamp(1.25rem, 2.4vw, 1.75rem); }
+    .section-head p { max-width: 600px; text-align: right; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; }
+    .problem-grid { display: grid; grid-template-columns: 1fr 64px 1fr; align-items: stretch; overflow: hidden; box-shadow: var(--shadow); }
+    .problem-side { display: grid; align-content: start; gap: 14px; padding: 26px; }
+    .problem-side.before { background: var(--soft); }
+    .problem-side h3 { font-size: 1.08rem; }
+    .problem-list { display: grid; gap: 11px; }
+    .problem-item { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 9px; align-items: start; color: var(--muted); font-size: .88rem; }
+    .problem-item span:first-child { display: grid; place-items: center; width: 24px; height: 24px; color: var(--red); background: var(--red-soft); border-radius: 8px; font-weight: 850; }
+    .after .problem-item span:first-child { color: var(--green); background: var(--green-soft); }
+    .bridge { display: grid; place-items: center; color: var(--blue); background: var(--blue-soft); font-size: 1.4rem; font-weight: 850; }
+    .flow { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); overflow: hidden; }
+    .flow-step { position: relative; min-height: 155px; padding: 22px 16px; background: var(--surface); border-right: 1px solid var(--line); }
+    .flow-step:last-child { border-right: 0; }
+    .flow-step::after { content: "›"; position: absolute; z-index: 2; top: 57px; right: -8px; width: 16px; color: var(--blue); background: var(--surface); text-align: center; font-size: 1.35rem; font-weight: 850; }
+    .flow-step:last-child::after { display: none; }
+    .flow-no { display: grid; place-items: center; width: 29px; height: 29px; margin-bottom: 12px; color: var(--navy); background: var(--blue-soft); border-radius: 9px; font-size: .74rem; font-weight: 850; }
+    .flow-step strong { display: block; margin-bottom: 4px; font-size: .87rem; }
+    .flow-step p { color: var(--muted); font-size: .75rem; line-height: 1.45; }
+    .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .metric { display: grid; gap: 4px; min-height: 127px; padding: 20px; }
+    .metric strong { font-size: 2rem; line-height: 1.15; }
+    .metric span { color: var(--muted); font-size: .79rem; }
+    .metric small { color: var(--blue); font-weight: 750; }
+    .gate-story { display: grid; grid-template-columns: 1fr minmax(190px, .44fr) 1fr; gap: 14px; align-items: stretch; }
+    .gate-card { display: grid; align-content: start; gap: 14px; padding: 25px; }
+    .status-pill { display: inline-flex; align-items: center; width: fit-content; padding: 6px 10px; border-radius: 999px; font-size: .76rem; font-weight: 850; }
+    .status-pill.block { color: var(--red); background: var(--red-soft); }
+    .status-pill.pass { color: var(--green); background: var(--green-soft); }
+    .gate-card h3 { font-size: 1.22rem; }
+    .gate-card p { color: var(--muted); font-size: .86rem; }
+    .gate-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .gate-fact { padding: 11px; background: var(--soft); border-radius: 10px; }
+    .gate-fact strong { display: block; font-size: 1.15rem; }
+    .gate-fact span { color: var(--muted); font-size: .72rem; }
+    .conditions { display: grid; align-content: center; gap: 9px; padding: 17px; text-align: center; color: var(--navy); background: var(--blue-soft); border: 1px dashed color-mix(in srgb, var(--blue) 45%, var(--line)); border-radius: 18px; }
+    .conditions-mark { font-size: 1.8rem; font-weight: 850; }
+    .conditions strong { font-size: .88rem; }
+    .conditions p { color: var(--muted); font-size: .74rem; }
+    .check-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .check { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 10px; color: var(--muted); background: var(--soft); border-radius: 9px; font-size: .72rem; }
+    .check b { color: var(--green); font-size: .68rem; }
+    .value-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .value-card { min-height: 205px; padding: 21px; }
+    .value-icon { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 17px; color: var(--navy); background: var(--blue-soft); border-radius: 12px; font-weight: 850; }
+    .value-card h3 { margin-bottom: 7px; font-size: .98rem; }
+    .value-card p { color: var(--muted); font-size: .82rem; }
+    .demo-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(310px, .9fr); gap: 14px; }
+    .script { padding: 25px; }
+    .script-list { display: grid; gap: 0; margin-top: 15px; }
+    .script-step { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 12px; padding: 15px 0; border-bottom: 1px solid var(--line); }
+    .script-step:last-child { border-bottom: 0; }
+    .script-time { color: var(--blue); font-size: .78rem; font-weight: 850; }
+    .script-step strong { display: block; font-size: .9rem; }
+    .script-step p { color: var(--muted); font-size: .8rem; }
+    .boundary-card { padding: 25px; border-left: 5px solid var(--amber); }
+    .boundary-card h3 { margin: 5px 0 13px; }
+    .boundary-list { display: grid; gap: 10px; }
+    .boundary-item { display: grid; grid-template-columns: 23px minmax(0, 1fr); gap: 9px; color: var(--muted); font-size: .82rem; }
+    .boundary-item b { display: grid; place-items: center; width: 21px; height: 21px; color: var(--amber); background: var(--amber-soft); border-radius: 50%; font-size: .7rem; }
+    .roadmap { display: grid; grid-template-columns: repeat(3, 1fr); overflow: hidden; }
+    .road-stage { min-height: 205px; padding: 24px; border-right: 1px solid var(--line); }
+    .road-stage:last-child { border-right: 0; }
+    .road-stage.current { background: var(--green-soft); }
+    .road-badge { display: inline-flex; padding: 4px 8px; color: var(--navy); background: var(--blue-soft); border-radius: 999px; font-size: .72rem; font-weight: 850; }
+    .current .road-badge { color: var(--green); background: var(--surface); }
+    .road-stage h3 { margin: 13px 0 7px; font-size: 1rem; }
+    .road-stage p { color: var(--muted); font-size: .82rem; }
+    .cta { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 22px; align-items: center; margin-top: 26px; padding: 30px; color: #fff; background: linear-gradient(135deg, #0a3049, #145579); border: 0; }
+    .cta h2 { margin: 4px 0 5px; }
+    .cta p { color: #d8eaf3; }
+    .cta .hero-actions { margin-top: 0; justify-content: flex-end; }
+    .error { margin-top: 18px; padding: 15px; color: var(--red); background: var(--red-soft); border-radius: 12px; }
+    .loading { animation: pulse 1.1s ease-in-out infinite alternate; }
+    @keyframes pulse { from { opacity: .45; } to { opacity: 1; } }
+    @media (max-width: 980px) {
+      .hero, .demo-grid { grid-template-columns: 1fr; }
+      .hero-proof { grid-template-columns: repeat(3, 1fr); }
+      .proof-card { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: repeat(4, 1fr); }
+      .flow-step { border-bottom: 1px solid var(--line); }
+      .value-grid { grid-template-columns: repeat(2, 1fr); }
+      .cta { grid-template-columns: 1fr; }
+      .cta .hero-actions { justify-content: flex-start; }
+    }
+    @media (max-width: 740px) {
+      .app-header, .section-head { align-items: flex-start; flex-direction: column; }
+      .header-actions { width: 100%; justify-content: space-between; }
+      .section-head p { text-align: left; }
+      .problem-grid, .gate-story { grid-template-columns: 1fr; }
+      .bridge { min-height: 52px; transform: rotate(90deg); }
+      .metric-grid { grid-template-columns: repeat(2, 1fr); }
+      .flow { grid-template-columns: repeat(2, 1fr); }
+      .hero-proof { grid-template-columns: 1fr; }
+      .proof-card { grid-template-columns: 42px 1fr; }
+      .roadmap { grid-template-columns: 1fr; }
+      .road-stage { border-right: 0; border-bottom: 1px solid var(--line); }
+    }
+    @media (max-width: 500px) {
+      main { width: min(100% - 20px, 1200px); margin-top: 12px; }
+      .hero { min-height: 0; padding: 25px 20px; border-radius: 19px; }
+      .metric-grid, .value-grid, .check-grid { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      .flow-step { min-height: 0; }
+      .hero-actions, .hero-actions .button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">AI</div>
+      <div><h1>Revenue Workflow AI Factory</h1><p>酒旅收益业务流程 AI 化工具</p></div>
+    </div>
+    <div class="header-actions">
+      <nav class="nav" aria-label="产品导航"><a class="active" href="./demo.html">比赛导览</a><a href="./index.html">流程 AI 化</a><a href="./strategies.html">策略集</a><a href="./validator.html">质量门禁</a></nav>
+      <span class="version">Competition MVP</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Competition Story · 可运行 MVP</span>
+        <h2>把收益经理经验，变成可复用、可验证的策略资产</h2>
+        <p class="hero-lead">从一个真实收益案例出发，AI 协助拆解业务流程，业务负责人确认后沉淀 Workflow 与候选策略，再由质量门禁阻止不完整条件进入执行。</p>
+        <div class="hero-actions">
+          <a class="button primary" href="./index.html">开始交互演示</a>
+          <a class="button" href="#case-result">查看真实运行结果</a>
+        </div>
+      </div>
+      <div class="hero-proof" aria-label="MVP 关键能力">
+        <div class="proof-card"><div class="proof-mark">1</div><div><strong>经验结构化</strong><span>人工 Case → 可追溯 Workflow</span></div></div>
+        <div class="proof-card"><div class="proof-mark">2</div><div><strong>策略资产化</strong><span>分散步骤 → 可管理策略卡</span></div></div>
+        <div class="proof-card"><div class="proof-mark">3</div><div><strong>风险门禁化</strong><span>条件不全 BLOCK → 补齐后 PASS</span></div></div>
+        <p class="trust-note">本页数字由同版 Python 程序在发布前真实运行 Case A 生成，不使用虚构的收益提升数据。</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div><span class="eyebrow">Why it matters</span><h2>部门真正缺的，不是又一个调价按钮</h2></div>
+        <p class="muted small">缺的是把个人经验转成团队资产，并让 AI 建议在进入业务试用前有清晰边界。</p>
+      </div>
+      <div class="problem-grid panel">
+        <div class="problem-side before">
+          <span class="eyebrow">Before · 经验散落</span><h3>依赖个人记忆和一次次人工复盘</h3>
+          <div class="problem-list">
+            <div class="problem-item"><span>×</span><p>优秀收益经理的判断过程难复制、难交接。</p></div>
+            <div class="problem-item"><span>×</span><p>不同 Case 的策略条件与适用边界缺少统一表达。</p></div>
+            <div class="problem-item"><span>×</span><p>AI 生成建议后，阈值、权限和价格底线可能仍不完整。</p></div>
+          </div>
+        </div>
+        <div class="bridge" aria-hidden="true">→</div>
+        <div class="problem-side after">
+          <span class="eyebrow">After · 资产沉淀</span><h3>统一为可复核、可追溯、可送检的策略资产</h3>
+          <div class="problem-list">
+            <div class="problem-item"><span>✓</span><p>Case 先沉淀为完整 Workflow，并保留人工确认记录。</p></div>
+            <div class="problem-item"><span>✓</span><p>Workflow 泛化为策略卡，记录触发、动作、指标和适用标签。</p></div>
+            <div class="problem-item"><span>✓</span><p>质量门禁在试用前检查完整性、引用、安全与人工判断条件。</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">Product loop</span><h2>当前 MVP 已打通的业务闭环</h2></div></div>
+      <div class="flow panel">
+        <div class="flow-step"><div class="flow-no">01</div><strong>真实 Case</strong><p>输入收益经理现有业务过程</p></div>
+        <div class="flow-step"><div class="flow-no">02</div><strong>AI / 规则分析</strong><p>拆解人机分工与自动化机会</p></div>
+        <div class="flow-step"><div class="flow-no">03</div><strong>人工复核</strong><p>业务负责人逐步确认并签名</p></div>
+        <div class="flow-step"><div class="flow-no">04</div><strong>Workflow</strong><p>生成统一、可追溯的蓝图</p></div>
+        <div class="flow-step"><div class="flow-no">05</div><strong>候选策略集</strong><p>泛化为可管理的策略卡</p></div>
+        <div class="flow-step"><div class="flow-no">06</div><strong>质量门禁</strong><p>条件不全即阻断试用</p></div>
+        <div class="flow-step"><div class="flow-no">07</div><strong>补齐再送检</strong><p>阈值与权限完整后才 PASS</p></div>
+      </div>
+    </section>
+
+    <section id="case-result" class="section">
+      <div class="section-head">
+        <div><span class="eyebrow">Live Case A snapshot</span><h2 id="case-name">高热日期收益决策循环</h2></div>
+        <p class="muted small">以下结果来自同一套 Analyzer → Strategy Set → Validator 程序链路。</p>
+      </div>
+      <div id="metrics" class="metric-grid loading" aria-live="polite">
+        <div class="metric panel"><strong id="metric-steps">—</strong><span>原始业务步骤</span><small>真实 Case 输入</small></div>
+        <div class="metric panel"><strong id="metric-strategies">—</strong><span>沉淀候选策略</span><small>全步骤可追溯</small></div>
+        <div class="metric panel"><strong id="metric-ready">—</strong><span>补齐后可试用策略</span><small>仍需正式审批</small></div>
+        <div class="metric panel"><strong id="metric-checks">—</strong><span>质量检查模块</span><small>全部真实运行</small></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div><span class="eyebrow">Core demo moment</span><h2>同一个 Workflow：从 BLOCK 到 PASS</h2></div>
+        <p class="muted small">PASS 不是“策略一定赚钱”，而是“条件完整、边界明确，可以进入受控试用”。</p>
+      </div>
+      <div class="gate-story">
+        <article class="gate-card panel">
+          <span id="initial-status" class="status-pill block">BLOCK</span>
+          <h3>首次送检：暂不允许进入试用</h3>
+          <p>Workflow 结构正确，但关键业务参数仍由经验掌握，系统不会擅自补值。</p>
+          <div class="gate-facts">
+            <div class="gate-fact"><strong id="initial-issues">—</strong><span>待补门禁问题</span></div>
+            <div class="gate-fact"><strong id="initial-pass">—</strong><span>已通过检查</span></div>
+          </div>
+        </article>
+        <div class="conditions">
+          <div class="conditions-mark">＋</div><strong>收益负责人补齐业务条件</strong>
+          <p>OCC / Pickup 阈值<br>外部市场证据<br>审批人与执行方式<br>价格底线与回滚规则</p>
+        </div>
+        <article class="gate-card panel">
+          <span id="completed-status" class="status-pill pass">PASS</span>
+          <h3>再次送检：允许受控小范围试用</h3>
+          <p>参数写回 Workflow，价格底线成为不可覆盖约束，再运行同一套质量检查。</p>
+          <div class="gate-facts">
+            <div class="gate-fact"><strong id="completed-issues">—</strong><span>剩余门禁问题</span></div>
+            <div class="gate-fact"><strong id="price-floor">—</strong><span>不可覆盖价格底线</span></div>
+          </div>
+        </article>
+      </div>
+      <div id="checks" class="check-grid" style="margin-top:12px"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">Department value</span><h2>它对收益部门的四个直接作用</h2></div></div>
+      <div class="value-grid">
+        <article class="value-card panel"><div class="value-icon">01</div><h3>经验资产化</h3><p>把“高手知道怎么判断”转成统一 Workflow 与策略卡，方便交接、共创和复用。</p></article>
+        <article class="value-card panel"><div class="value-icon">02</div><h3>减少重复梳理</h3><p>同类 Case 不再每次从零讨论，策略触发、动作、指标和待补条件有标准载体。</p></article>
+        <article class="value-card panel"><div class="value-icon">03</div><h3>AI 风险可控</h3><p>AI 只给建议；阈值、权限、价格底线和正式审批继续由业务负责人掌握。</p></article>
+        <article class="value-card panel"><div class="value-icon">04</div><h3>为测试打基础</h3><p>后续可按城市、商圈和门店标签配置参数，追踪结果，再提出有证据的调整建议。</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">Presentation guide</span><h2>现场 3 分钟演示顺序</h2></div></div>
+      <div class="demo-grid">
+        <article class="script panel">
+          <h3>从业务痛点讲到可运行结果</h3>
+          <div class="script-list">
+            <div class="script-step"><div class="script-time">0:00</div><div><strong>先讲问题</strong><p>收益经验分散在个人和案例里，难沉淀，也缺少 AI 上线前的安全边界。</p></div></div>
+            <div class="script-step"><div class="script-time">0:35</div><div><strong>打开“流程 AI 化”</strong><p>载入 Case A，展示 12 步业务过程如何拆成人机协作 Workflow，并由收益经理复核。</p></div></div>
+            <div class="script-step"><div class="script-time">1:20</div><div><strong>展示候选策略集</strong><p>说明 12 步不是机械复制，而是归并成 6 张可追溯策略卡。</p></div></div>
+            <div class="script-step"><div class="script-time">2:00</div><div><strong>完成 BLOCK → PASS</strong><p>先让门禁阻断，再补齐阈值、权限、价格底线和回滚，重新送检通过。</p></div></div>
+            <div class="script-step"><div class="script-time">2:45</div><div><strong>主动说清边界</strong><p>当前只支持受控小范围试用，不是自动调价系统；下一版才进入分群配置与效果追踪。</p></div></div>
+          </div>
+        </article>
+        <aside class="boundary-card panel">
+          <span class="eyebrow">Honest boundary</span><h3>这一版明确不承诺什么</h3>
+          <div class="boundary-list">
+            <div class="boundary-item"><b>!</b><p>不声称已验证收益提升，也不展示虚构 ROI。</p></div>
+            <div class="boundary-item"><b>!</b><p>PASS 不代表策略最优，只代表具备受控试用条件。</p></div>
+            <div class="boundary-item"><b>!</b><p>不绕过收益经理，不直接连接后台自动调价。</p></div>
+            <div class="boundary-item"><b>!</b><p>不包含通用 Runtime、线上调度和自动学习闭环。</p></div>
+            <div class="boundary-item"><b>!</b><p id="remaining-gap">仍需补齐竞对数据来源与刷新机制。</p></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><span class="eyebrow">Roadmap</span><h2>从策略资产，到按门店持续学习</h2></div></div>
+      <div class="roadmap panel">
+        <article class="road-stage current"><span class="road-badge">V1 · 当前 MVP</span><h3>经验结构化与质量门禁</h3><p>人工 Case → Workflow → 候选策略集 → 补齐条件 → 允许受控试用。</p></article>
+        <article class="road-stage"><span class="road-badge">V2 · 下一版</span><h3>策略参数化与分群测试</h3><p>按城市、商圈、门店标签配置不同参数，用历史回放或影子门店追踪结果。</p></article>
+        <article class="road-stage"><span class="road-badge">V3 · 未来</span><h3>证据驱动的学习建议</h3><p>基于试用结果提出策略补充或参数调整建议，仍由业务负责人审批后生效。</p></article>
+      </div>
+    </section>
+
+    <section class="cta panel">
+      <div><span class="eyebrow" style="color:#bde4f8">Ready to demo</span><h2>现在进入可操作的比赛演示</h2><p>建议先打开流程 AI 化，完成 Case A 的人工复核和 BLOCK → PASS。</p></div>
+      <div class="hero-actions">
+        <a class="button primary" href="./index.html">开始 Case A</a>
+        <a class="button" href="./strategies.html">查看策略集</a>
+        <a class="button" href="./validator.html">查看质量门禁</a>
+      </div>
+    </section>
+
+    <div id="error" class="error" role="alert" hidden></div>
+  </main>
+
+  <script>
+    const $ = selector => document.querySelector(selector);
+
+    function passCount(checks) {
+      return checks.filter(check => check.status === "PASS").length;
+    }
+
+    function renderSnapshot(data) {
+      $("#case-name").textContent = data.caseName;
+      $("#metric-steps").textContent = data.sourceSteps;
+      $("#metric-strategies").textContent = data.strategySummary.total;
+      $("#metric-ready").textContent = data.strategySummary.pilotReady;
+      $("#metric-checks").textContent = data.completedGate.checks.length;
+      $("#initial-status").textContent = data.initialGate.status;
+      $("#initial-issues").textContent = data.initialGate.issueCount;
+      $("#initial-pass").textContent = passCount(data.initialGate.checks);
+      $("#completed-status").textContent = data.completedGate.status;
+      $("#completed-issues").textContent = data.completedGate.issueCount;
+      const floor = data.readiness.priceFloorConstraint.value;
+      $("#price-floor").textContent = floor == null ? "—" : `¥${Number(floor).toLocaleString("zh-CN")}`;
+      const gaps = data.readiness.remainingGaps || [];
+      $("#remaining-gap").textContent = gaps.length
+        ? `仍需补齐：${gaps.map(item => item.gap).join("、")}。`
+        : "当前没有未记录的数据接入缺口。";
+      $("#checks").innerHTML = data.completedGate.checks.map(check =>
+        `<div class="check"><span>${check.name.replace(" Validator", "")}</span><b>${check.status}</b></div>`
+      ).join("");
+      $("#metrics").classList.remove("loading");
+    }
+
+    async function loadSnapshot() {
+      try {
+        const response = await fetch("./data/demo-snapshot.json", {cache: "no-store"});
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "比赛快照读取失败");
+        renderSnapshot(data);
+      } catch (error) {
+        $("#metrics").classList.remove("loading");
+        $("#error").textContent = `无法读取实际运行快照：${error.message || String(error)}`;
+        $("#error").hidden = false;
+      }
+    }
+
+    loadSnapshot();
+  </script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+{
+  "workflowId": null,
+  "workflowName": "Cancellation Revenue Recovery Workflow",
+  "schemaVersion": "0.2.1",
+  "overallStatus": "BLOCK",
+  "checks": [
+    {
+      "validator": "Structure Validator",
+      "status": "PASS"
+    },
+    {
+      "validator": "Reference Validator",
+      "status": "PASS"
+    },
+    {
+      "validator": "Graph Validator",
+      "status": "BLOCK"
+    },
+    {
+      "validator": "Branch Validator",
+      "status": "PASS"
+    },
+    {
+      "validator": "Safety Validator",
+      "status": "PASS"
+    },
+    {
+      "validator": "Human Judgment Validator",
+      "status": "BLOCK"
+    }
+  ],
+  "issues": [
+    {
+      "issueId": "VAL-0001",
+      "validator": "graph",
+      "severity": "BLOCK",
+      "code": "GRAPH_LOOP_EXIT_MISSING",
+      "location": "loops[0].exitConditions",
+      "message": "Loop 'L-CB-001' has no exit condition.",
+      "suggestedFix": "Add at least one explicit exit condition."
+    },
+    {
+      "issueId": "VAL-0002",
+      "validator": "graph",
+      "severity": "BLOCK",
+      "code": "GRAPH_LOOP_MAX_ITERATIONS_MISSING",
+      "location": "loops[0].maxIterations",
+      "message": "Loop 'L-CB-001' has no positive maxIterations safety limit.",
+      "suggestedFix": "Set maxIterations to a positive number."
+    },
+    {
+      "issueId": "VAL-0003",
+      "validator": "human_judgment",
+      "severity": "BLOCK",
+      "code": "HUMAN_JUDGMENT_UNRESOLVED_PARAMETER",
+      "location": "dataInputs[0].configurableParameters[0].validationStatus",
+      "message": "Parameter 'STORE_CANCEL_THRESHOLD' is unresolved and cannot be used for automatic execution.",
+      "suggestedFix": "Validate the parameter value or route the workflow through human-reviewed mode."
+    },
+    {
+      "issueId": "VAL-0004",
+      "validator": "human_judgment",
+      "severity": "BLOCK",
+      "code": "HUMAN_JUDGMENT_UNRESOLVED_PARAMETER",
+      "location": "dataInputs[0].configurableParameters[1].validationStatus",
+      "message": "Parameter 'STORE_CANCEL_WINDOW_MINUTES' is unresolved and cannot be used for automatic execution.",
+      "suggestedFix": "Validate the parameter value or route the workflow through human-reviewed mode."
+    }
+  ],
+  "businessSummary": {
+    "status": "BLOCK",
+    "verdict": "暂不允许自动执行",
+    "headline": "该 Workflow 存在不应自动执行的风险",
+    "summary": "发现 4 个需处理问题，质量门禁已阻止其进入自动执行。",
+    "impact": "如果跳过门禁，可能出现流程中断、错误决策或突破经营底线。",
+    "primaryAction": "按风险清单完成修复，然后重新提交评审。",
+    "issueCount": 4,
+    "issues": [
+      {
+        "issueId": "VAL-0001",
+        "severity": "BLOCK",
+        "validator": "graph",
+        "title": "循环策略没有退出条件",
+        "impact": "断路、孤立环节或无限循环可能让业务流程中断或无法收口。",
+        "owner": "流程实施负责人",
+        "action": "补齐断开的环节，并为循环设置退出保护。"
+      },
+      {
+        "issueId": "VAL-0002",
+        "severity": "BLOCK",
+        "validator": "graph",
+        "title": "循环策略没有最大执行次数",
+        "impact": "断路、孤立环节或无限循环可能让业务流程中断或无法收口。",
+        "owner": "流程实施负责人",
+        "action": "补齐断开的环节，并为循环设置退出保护。"
+      },
+      {
+        "issueId": "VAL-0003",
+        "severity": "BLOCK",
+        "validator": "human_judgment",
+        "title": "关键经营参数尚未确认",
+        "impact": "未确认的阈值或经验可能被 AI 当成确定规则执行。",
+        "owner": "业务 / 收益负责人",
+        "action": "由业务负责人确认参数，或保留人工审批门禁。"
+      },
+      {
+        "issueId": "VAL-0004",
+        "severity": "BLOCK",
+        "validator": "human_judgment",
+        "title": "关键经营参数尚未确认",
+        "impact": "未确认的阈值或经验可能被 AI 当成确定规则执行。",
+        "owner": "业务 / 收益负责人",
+        "action": "由业务负责人确认参数，或保留人工审批门禁。"
+      }
+    ],
+    "checkpoints": [
+      {
+        "key": "structure",
+        "name": "流程信息完整性",
+        "question": "必要的业务信息是否齐全",
+        "status": "PASS",
+        "technicalName": "Structure Validator"
+      },
+      {
+        "key": "reference",
+        "name": "流程环节衔接",
+        "question": "每个环节是否连到正确对象",
+        "status": "PASS",
+        "technicalName": "Reference Validator"
+      },
+      {
+        "key": "graph",
+        "name": "全流程可达性",
+        "question": "流程能否从开始走到安全结束",
+        "status": "BLOCK",
+        "technicalName": "Graph Validator"
+      },
+      {
+        "key": "branch",
+        "name": "经营分支明确性",
+        "question": "不同经营结果是否有唯一处理路径",
+        "status": "PASS",
+        "technicalName": "Branch Validator"
+      },
+      {
+        "key": "safety",
+        "name": "经营底线与安全退出",
+        "question": "决策是否遵守不可突破的经营约束",
+        "status": "PASS",
+        "technicalName": "Safety Validator"
+      },
+      {
+        "key": "human_judgment",
+        "name": "人工经验确认",
+        "question": "未验证的业务经验是否被误当成自动规则",
+        "status": "BLOCK",
+        "technicalName": "Human Judgment Validator"
+      }
+    ],
+    "boundaryNote": "本评审只判断 Workflow 能否安全进入下一阶段，不判断业务策略是否最优。"
+  },
+  "humanReadableReport": "Workflow: Cancellation Revenue Recovery Workflow\nSchema Version: 0.2.1\n\nValidation Result:\nStructure Validator      PASS\nReference Validator      PASS\nGraph Validator          BLOCK\nBranch Validator         PASS\nSafety Validator         PASS\nHuman Judgment Validator BLOCK\n\nOverall Status: BLOCK\n\nIssues:\n- VAL-0001 [BLOCK] GRAPH_LOOP_EXIT_MISSING @ loops[0].exitConditions: Loop 'L-CB-001' has no exit condition. Fix: Add at least one explicit exit condition.\n- VAL-0002 [BLOCK] GRAPH_LOOP_MAX_ITERATIONS_MISSING @ loops[0].maxIterations: Loop 'L-CB-001' has no positive maxIterations safety limit. Fix: Set maxIterations to a positive number.\n- VAL-0003 [BLOCK] HUMAN_JUDGMENT_UNRESOLVED_PARAMETER @ dataInputs[0].configurableParameters[0].validationStatus: Parameter 'STORE_CANCEL_THRESHOLD' is unresolved and cannot be used for automatic execution. Fix: Validate the parameter value or route the workflow through human-reviewed mode.\n- VAL-0004 [BLOCK] HUMAN_JUDGMENT_UNRESOLVED_PARAMETER @ dataInputs[0].configurableParameters[1].validationStatus: Parameter 'STORE_CANCEL_WINDOW_MINUTES' is unresolved and cannot be used for automatic execution. Fix: Validate the parameter value or route the workflow through human-reviewed mode.",
+  "sourceName": "TEST-07 · Loop has no exit or iteration limit"
+}

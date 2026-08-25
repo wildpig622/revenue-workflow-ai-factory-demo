@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 收益工作流质量门禁</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f2f5f8;
+      --surface: #ffffff;
+      --surface-soft: #f7f9fb;
+      --ink: #172331;
+      --muted: #627184;
+      --line: #dbe3eb;
+      --navy: #153f62;
+      --navy-2: #0e3150;
+      --navy-soft: #eaf2f8;
+      --pass: #17633b;
+      --pass-bg: #e1f4e8;
+      --warning: #765300;
+      --warning-bg: #fff0c5;
+      --block: #982b25;
+      --block-bg: #fee4e1;
+      --shadow: 0 18px 55px rgba(28, 48, 70, .10);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --bg: #0d131a;
+        --surface: #141c26;
+        --surface-soft: #101821;
+        --ink: #edf2f7;
+        --muted: #9aabba;
+        --line: #2d3947;
+        --navy: #86b9e3;
+        --navy-2: #a5cef0;
+        --navy-soft: #172b3b;
+        --pass: #8ee0b1;
+        --pass-bg: #173729;
+        --warning: #ffd778;
+        --warning-bg: #3b2e0d;
+        --block: #ffb4ae;
+        --block-bg: #442326;
+        --shadow: 0 18px 55px rgba(0, 0, 0, .32);
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: Inter, "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+    button, input, select { font: inherit; }
+    button, select, input[type="file"] { min-height: 42px; }
+    button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--navy) 28%, transparent);
+      outline-offset: 2px;
+    }
+    h1, h2, h3, p { margin: 0; }
+    .muted { color: var(--muted); }
+    .small { font-size: .82rem; }
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 72px;
+      padding: 12px max(20px, calc((100% - 1200px) / 2));
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+    .brand, .header-meta, .header-actions, .nav, .actions, .issue-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .logo {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      color: #fff;
+      background: linear-gradient(145deg, #1d5a87, #123955);
+      font-size: 1.05rem;
+      font-weight: 800;
+      box-shadow: 0 8px 22px rgba(21, 63, 98, .25);
+    }
+    .brand h1 { font-size: 1.04rem; }
+    .brand p { color: var(--muted); font-size: .8rem; }
+    a { color: inherit; text-decoration: none; }
+    .nav a { padding: 7px 10px; color: var(--muted); border-radius: 9px; font-size: .84rem; font-weight: 700; }
+    .nav a:hover { background: var(--surface-soft); }
+    .nav a.active { color: var(--navy); background: var(--navy-soft); }
+    .chip, .status-pill, .module-status, .severity {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 720;
+      white-space: nowrap;
+    }
+    .chip { color: var(--muted); background: var(--surface-soft); border: 1px solid var(--line); }
+    main { width: min(1200px, calc(100% - 32px)); margin: 24px auto 52px; }
+    .input-panel {
+      display: grid;
+      grid-template-columns: minmax(240px, .75fr) minmax(0, 1.8fr);
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 18px;
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+    .input-intro { display: grid; gap: 4px; align-self: center; }
+    .eyebrow {
+      color: var(--navy);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .field-row { display: flex; align-items: end; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+    label { display: grid; gap: 6px; color: var(--muted); font-size: .8rem; font-weight: 700; }
+    select, input[type="file"] {
+      max-width: 100%;
+      padding: 8px 10px;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+    select { width: 310px; }
+    input[type="file"] { width: 265px; }
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 9px 13px;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    button:hover { background: var(--surface-soft); }
+    button.primary { color: #fff; background: #153f62; border-color: transparent; }
+    button.primary:hover { background: #0e3150; }
+    button:disabled { cursor: wait; opacity: .6; }
+    .error {
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      color: var(--block);
+      background: var(--block-bg);
+      border: 1px solid color-mix(in srgb, var(--block) 34%, transparent);
+      border-radius: 11px;
+    }
+    .decision-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(240px, .7fr);
+      overflow: hidden;
+      margin-bottom: 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+    .decision-main { padding: 26px; border-left: 6px solid var(--line); }
+    .decision-card.pass .decision-main { border-left-color: var(--pass); }
+    .decision-card.warning .decision-main { border-left-color: var(--warning); }
+    .decision-card.block .decision-main { border-left-color: var(--block); }
+    .decision-kicker { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
+    .decision-main h2 { max-width: 780px; margin-bottom: 7px; font-size: clamp(1.4rem, 2.5vw, 2rem); line-height: 1.24; }
+    .decision-main .lead { max-width: 800px; color: var(--muted); }
+    .status-pill.pass, .module-status.pass, .severity.pass { color: var(--pass); background: var(--pass-bg); }
+    .status-pill.warning, .module-status.warning, .severity.warning { color: var(--warning); background: var(--warning-bg); }
+    .status-pill.block, .module-status.block, .severity.block { color: var(--block); background: var(--block-bg); }
+    .decision-impact {
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      padding: 24px;
+      background: var(--surface-soft);
+      border-left: 1px solid var(--line);
+    }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin: 22px 0 11px; }
+    .section-heading h2 { font-size: 1.08rem; }
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 11px;
+      margin-bottom: 18px;
+    }
+    .module {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+      padding: 15px;
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 13px;
+    }
+    .module[aria-pressed="true"] { border-color: var(--navy); box-shadow: 0 0 0 2px color-mix(in srgb, var(--navy) 18%, transparent); }
+    .module-top { display: flex; align-items: start; justify-content: space-between; gap: 8px; }
+    .module-name { line-height: 1.35; }
+    .module-question { color: var(--muted); font-size: .8rem; }
+    .content-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 15px; overflow: hidden; }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 17px 18px; border-bottom: 1px solid var(--line); }
+    .risk-list { display: grid; }
+    .risk-card { display: grid; gap: 13px; padding: 18px; border-bottom: 1px solid var(--line); }
+    .risk-card:last-child { border-bottom: 0; }
+    .risk-title-row { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+    .risk-title { font-size: 1rem; line-height: 1.4; }
+    .impact-box { padding: 11px 12px; background: var(--surface-soft); border-radius: 10px; }
+    .impact-box strong, .action-box strong { display: block; margin-bottom: 3px; color: var(--muted); font-size: .76rem; letter-spacing: .04em; }
+    .owner-action { display: grid; grid-template-columns: minmax(150px, .55fr) minmax(0, 1.45fr); gap: 12px; }
+    .owner-box, .action-box { padding-top: 2px; }
+    .owner-label { color: var(--muted); font-size: .76rem; font-weight: 700; }
+    .owner-value { margin-top: 3px; font-weight: 700; }
+    .side { padding: 18px; display: grid; gap: 19px; }
+    .facts { display: grid; gap: 11px; }
+    .fact { display: grid; gap: 3px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    .fact:last-child { padding-bottom: 0; border-bottom: 0; }
+    .fact span { color: var(--muted); font-size: .78rem; }
+    .next-box { padding: 13px; background: var(--navy-soft); border-radius: 11px; }
+    .boundary { padding-top: 15px; border-top: 1px solid var(--line); }
+    .empty { padding: 30px 18px; color: var(--muted); text-align: center; }
+    details.technical { margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    details.technical > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 17px; cursor: pointer; font-weight: 750; list-style: none; }
+    details.technical > summary::-webkit-details-marker { display: none; }
+    details.technical > summary::after { content: "+"; color: var(--muted); font-size: 1.2rem; }
+    details.technical[open] > summary::after { content: "−"; }
+    .technical-list { border-top: 1px solid var(--line); }
+    .technical-issue { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; padding: 15px 17px; border-bottom: 1px solid var(--line); }
+    .technical-issue:last-child { border-bottom: 0; }
+    .technical-body { display: grid; gap: 7px; min-width: 0; }
+    code { color: var(--navy); font-size: .8rem; overflow-wrap: anywhere; }
+    .fix { padding: 9px 10px; background: var(--surface-soft); border-left: 3px solid var(--warning); border-radius: 0 8px 8px 0; }
+    .loading::after { content: ""; width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 900px) {
+      .input-panel, .decision-card { grid-template-columns: 1fr; }
+      .field-row { justify-content: flex-start; }
+      .decision-impact { border-left: 0; border-top: 1px solid var(--line); }
+      .content-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .app-header { align-items: flex-start; flex-direction: column; }
+      .module-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .owner-action { grid-template-columns: 1fr; }
+      .decision-kicker, .section-heading { align-items: flex-start; flex-direction: column; }
+      .field-row { display: grid; grid-template-columns: 1fr; }
+      select, input[type="file"] { width: 100%; }
+      .actions { width: 100%; }
+      .actions button { flex: 1; }
+    }
+    @media (max-width: 460px) {
+      main { width: min(100% - 20px, 1200px); }
+      .module-grid { grid-template-columns: 1fr; }
+      .technical-issue { grid-template-columns: 1fr; }
+      .decision-main, .decision-impact { padding: 19px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">AI</div>
+      <div>
+        <h1>AI 收益工作流质量门禁</h1>
+        <p>在自动执行前，识别流程、决策与经营底线风险</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <nav class="nav" aria-label="产品导航"><a href="./demo.html">比赛导览</a><a href="./index.html">流程 AI 化</a><a href="./strategies.html">策略集</a><a class="active" href="./validator.html">质量门禁</a></nav>
+      <div class="header-meta"><span class="chip">质量保障 MVP v0.1</span><span class="chip">Schema 0.2.1</span></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="input-panel" aria-label="提交 Workflow 评审">
+      <div class="input-intro">
+        <span class="eyebrow">第一步</span>
+        <h2>选择待评审 Workflow</h2>
+        <p class="muted small">GitHub Pages 比赛版可交互切换 8 个真实预检场景；源码版同时支持上传 YAML / JSON。</p>
+      </div>
+      <div class="field-row">
+        <label for="scenario">演示场景
+          <select id="scenario">
+            <option value="TEST-01">取消后收益恢复 · 关键参数待确认</option>
+            <option value="TEST-02">并行处理后缺少汇合环节</option>
+            <option value="TEST-03">经营分支指向不存在的环节</option>
+            <option value="TEST-04">决策结果关联错误环节</option>
+            <option value="TEST-05">未确认阈值被预填为默认值</option>
+            <option value="TEST-06">最终经营决策突破价格底线</option>
+            <option value="TEST-07">循环观察策略缺少退出保护</option>
+            <option value="TEST-08">同一经营结果存在冲突路径</option>
+          </select>
+        </label>
+        <label for="workflow-file">上传 Workflow
+          <input id="workflow-file" type="file" accept=".yaml,.yml,.json,application/json" disabled title="GitHub Pages 比赛版请使用内置场景">
+        </label>
+        <button id="validate-file" class="primary" type="button">开始质量评审</button>
+      </div>
+    </section>
+
+    <div id="error" class="error" role="alert" hidden></div>
+
+    <section id="decision-card" class="decision-card" aria-live="polite">
+      <div class="decision-main">
+        <div class="decision-kicker">
+          <div><span class="eyebrow">业务评审结论</span><p id="source-name" class="muted small">正在评审真实 Case B…</p></div>
+          <span id="overall-status" class="status-pill">—</span>
+        </div>
+        <h2 id="decision-headline">正在生成业务评审结果</h2>
+        <p id="decision-summary" class="lead">请稍候</p>
+      </div>
+      <div class="decision-impact">
+        <span class="eyebrow">对经营的影响</span>
+        <p id="business-impact" class="muted">等待评审结果。</p>
+      </div>
+    </section>
+
+    <div class="section-heading">
+      <div><span class="eyebrow">第二步</span><h2>六项上线前业务门禁</h2></div>
+      <p class="muted small">点击卡片可只查看该类问题</p>
+    </div>
+    <section id="module-grid" class="module-grid" aria-label="业务门禁状态"></section>
+
+    <div class="content-grid">
+      <section class="panel" aria-labelledby="risks-title">
+        <div class="panel-head">
+          <div><span class="eyebrow">第三步</span><h2 id="risks-title">待处理业务风险</h2><p id="issue-count" class="muted small">等待评审</p></div>
+          <button id="clear-filter" type="button" hidden>显示全部</button>
+        </div>
+        <div id="business-issue-list" class="risk-list"></div>
+      </section>
+
+      <aside class="panel side" aria-label="评审信息">
+        <div>
+          <span class="eyebrow">本次评审</span>
+          <h3>Workflow 信息</h3>
+        </div>
+        <div class="facts">
+          <div class="fact"><span>流程名称</span><strong id="workflow-name">—</strong></div>
+          <div class="fact"><span>规范版本</span><strong id="schema-version">—</strong></div>
+          <div class="fact"><span>待处理问题</span><strong id="total-issues">—</strong></div>
+          <div class="fact"><span>门禁结论</span><strong id="execution-state">—</strong></div>
+        </div>
+        <div class="next-box">
+          <span class="eyebrow">建议下一步</span>
+          <p id="primary-action"></p>
+        </div>
+        <div class="boundary">
+          <strong class="small">评审边界</strong>
+          <p id="boundary-note" class="muted small"></p>
+        </div>
+        <div class="actions">
+          <button id="download-json" type="button" disabled>下载审计 JSON</button>
+          <button id="download-text" type="button" disabled>下载文本报告</button>
+        </div>
+      </aside>
+    </div>
+
+    <details class="technical">
+      <summary><span>查看技术详情</span><span id="technical-count" class="muted small">等待评审</span></summary>
+      <div id="technical-list" class="technical-list"></div>
+    </details>
+  </main>
+
+  <script>
+    let lastReport = null;
+    let activeFilter = null;
+    const $ = selector => document.querySelector(selector);
+
+    function statusClass(status) { return String(status || "").toLowerCase(); }
+    function statusLabel(status) {
+      return status === "PASS" ? "已通过" : status === "WARNING" ? "待确认" : status === "BLOCK" ? "已拦截" : status;
+    }
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
+    }
+    function setError(message) {
+      const box = $("#error");
+      box.textContent = message || "";
+      box.hidden = !message;
+    }
+    function setLoading(loading) {
+      const button = $("#validate-file");
+      button.disabled = loading;
+      button.classList.toggle("loading", loading);
+      button.textContent = loading ? "正在评审" : "开始质量评审";
+    }
+    async function requestValidation(payload) {
+      setError("");
+      setLoading(true);
+      try {
+        if (!payload.scenarioId) throw new Error("GitHub Pages 比赛版请选择内置场景。");
+        const response = await fetch(`./data/validator/${encodeURIComponent(payload.scenarioId)}.json`, {cache: "no-store"});
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "评审请求失败");
+        if (!data.businessSummary) throw new Error("服务未返回业务评审结果，请重启页面服务。");
+        lastReport = data;
+        activeFilter = null;
+        renderReport();
+      } catch (error) {
+        setError(error.message || String(error));
+      } finally {
+        setLoading(false);
+      }
+    }
+    function renderReport() {
+      const business = lastReport.businessSummary;
+      const status = business.status;
+      $("#decision-card").className = `decision-card ${statusClass(status)}`;
+      $("#source-name").textContent = lastReport.sourceName;
+      $("#decision-headline").textContent = business.headline;
+      $("#decision-summary").textContent = business.summary;
+      $("#business-impact").textContent = business.impact;
+      const pill = $("#overall-status");
+      pill.className = `status-pill ${statusClass(status)}`;
+      pill.textContent = business.verdict;
+      $("#workflow-name").textContent = lastReport.workflowName || "(未提供)";
+      $("#schema-version").textContent = lastReport.schemaVersion || "(缺失)";
+      $("#total-issues").textContent = `${business.issueCount} 项`;
+      $("#execution-state").textContent = business.verdict;
+      $("#primary-action").textContent = business.primaryAction;
+      $("#boundary-note").textContent = business.boundaryNote;
+      $("#download-json").disabled = false;
+      $("#download-text").disabled = false;
+      renderModules();
+      renderBusinessIssues();
+      renderTechnicalIssues();
+    }
+    function renderModules() {
+      const grid = $("#module-grid");
+      grid.replaceChildren();
+      lastReport.businessSummary.checkpoints.forEach(checkpoint => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "module";
+        button.setAttribute("aria-pressed", activeFilter === checkpoint.key ? "true" : "false");
+        button.innerHTML = `<span class="module-top"><strong class="module-name">${escapeHtml(checkpoint.name)}</strong><span class="module-status ${statusClass(checkpoint.status)}">${escapeHtml(statusLabel(checkpoint.status))}</span></span><span class="module-question">${escapeHtml(checkpoint.question)}</span><span class="muted small">${escapeHtml(checkpoint.technicalName)}</span>`;
+        button.addEventListener("click", () => {
+          activeFilter = activeFilter === checkpoint.key ? null : checkpoint.key;
+          renderModules();
+          renderBusinessIssues();
+          renderTechnicalIssues();
+        });
+        grid.appendChild(button);
+      });
+    }
+    function filteredBusinessIssues() {
+      const issues = lastReport.businessSummary.issues;
+      return activeFilter ? issues.filter(issue => issue.validator === activeFilter) : issues;
+    }
+    function filteredTechnicalIssues() {
+      return activeFilter ? lastReport.issues.filter(issue => issue.validator === activeFilter) : lastReport.issues;
+    }
+    function renderBusinessIssues() {
+      const list = $("#business-issue-list");
+      const issues = filteredBusinessIssues();
+      list.replaceChildren();
+      $("#issue-count").textContent = `${issues.length} 项风险${activeFilter ? " · 已按门禁筛选" : ""}`;
+      $("#clear-filter").hidden = !activeFilter;
+      if (!issues.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = activeFilter ? "该项业务门禁未发现问题。" : "当前评审范围内未发现需要处理的业务风险。";
+        list.appendChild(empty);
+        return;
+      }
+      issues.forEach(issue => {
+        const article = document.createElement("article");
+        const severity = statusClass(issue.severity);
+        article.className = "risk-card";
+        article.innerHTML = `<div class="risk-title-row"><div><span class="owner-label">${escapeHtml(issue.issueId)}</span><h3 class="risk-title">${escapeHtml(issue.title)}</h3></div><span class="severity ${severity}">${escapeHtml(statusLabel(issue.severity))}</span></div><div class="impact-box"><strong>可能影响</strong><p>${escapeHtml(issue.impact)}</p></div><div class="owner-action"><div class="owner-box"><span class="owner-label">建议责任人</span><p class="owner-value">${escapeHtml(issue.owner)}</p></div><div class="action-box"><strong>建议处理动作</strong><p>${escapeHtml(issue.action)}</p></div></div>`;
+        list.appendChild(article);
+      });
+    }
+    function renderTechnicalIssues() {
+      const list = $("#technical-list");
+      const issues = filteredTechnicalIssues();
+      list.replaceChildren();
+      $("#technical-count").textContent = `${issues.length} 条技术记录${activeFilter ? " · 已筛选" : ""}`;
+      if (!issues.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "没有 Validation Issue。";
+        list.appendChild(empty);
+        return;
+      }
+      issues.forEach(issue => {
+        const article = document.createElement("article");
+        const severity = statusClass(issue.severity);
+        article.className = "technical-issue";
+        article.innerHTML = `<span class="severity ${severity}">${escapeHtml(issue.severity)}</span><div class="technical-body"><div class="issue-meta"><strong>${escapeHtml(issue.issueId)} · ${escapeHtml(issue.code)}</strong><span class="chip">${escapeHtml(issue.validator)}</span></div><code>${escapeHtml(issue.location)}</code><p>${escapeHtml(issue.message)}</p><p class="fix"><strong>Suggested Fix：</strong>${escapeHtml(issue.suggestedFix)}</p></div>`;
+        list.appendChild(article);
+      });
+    }
+    function download(content, filename, type) {
+      const url = URL.createObjectURL(new Blob([content], {type}));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+    $("#scenario").addEventListener("change", event => {
+      $("#workflow-file").value = "";
+      requestValidation({scenarioId: event.target.value});
+    });
+    $("#validate-file").addEventListener("click", async () => {
+      requestValidation({scenarioId: $("#scenario").value});
+    });
+    $("#clear-filter").addEventListener("click", () => {
+      activeFilter = null;
+      renderModules();
+      renderBusinessIssues();
+      renderTechnicalIssues();
+    });
+    $("#download-json").addEventListener("click", () => download(JSON.stringify(lastReport, null, 2), "workflow-quality-review.json", "application/json"));
+    $("#download-text").addEventListener("click", () => download(lastReport.humanReadableReport, "workflow-quality-review.txt", "text/plain"));
+    requestValidation({scenarioId: "TEST-01"});
+  </script>
+</body>
+</html>

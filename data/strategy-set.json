@@ -1,0 +1,371 @@
+{
+  "strategySetId": "SET-EAC0CC61",
+  "strategySetName": "高热日期收益决策循环 · 候选策略集",
+  "version": "0.2-pilot",
+  "status": "pilot_ready",
+  "statusLabel": "允许进入小范围试用",
+  "domain": "hotel_revenue_management",
+  "createdAt": "2026-08-25T01:53:41+00:00",
+  "sourceCase": {
+    "caseName": "高热日期收益决策循环",
+    "workflowReview": {
+      "reviewedBy": "收益经理（比赛演示）",
+      "reviewedAt": "2026-08-25T01:53:41+00:00",
+      "reviewNote": "已对 Case A 的步骤分工、风险边界与人工审批点完成复核。",
+      "scope": "step_classification"
+    },
+    "sourceStepCount": 12
+  },
+  "summary": {
+    "totalStrategies": 6,
+    "candidateCount": 0,
+    "needsDefinitionCount": 0,
+    "pilotReadyCount": 6,
+    "supportingDataStepCount": 2,
+    "openItemCount": 6
+  },
+  "supportingDataSteps": [
+    {
+      "stepId": "STEP-02",
+      "description": "拉取未来7天的 OCC、Pickup、剩余库存和房型结构"
+    },
+    {
+      "stepId": "STEP-05",
+      "description": "查询约10家竞对的价格、库存和周边需求事件"
+    }
+  ],
+  "strategyCards": [
+    {
+      "strategyId": "STR-001",
+      "strategyName": "经营日期日常监测策略",
+      "strategyType": "监测策略",
+      "version": "0.2-pilot",
+      "status": "pilot_ready",
+      "statusLabel": "可进入试用",
+      "businessPurpose": "按固定节奏发现可能需要收益干预的未来经营日期。",
+      "triggerCondition": "进入每日收益监测周期，并具备未来经营日期的基础经营数据。",
+      "recommendedAction": "每天早上检查负责门店未来经营日期",
+      "applicableScope": {
+        "domain": "酒旅收益管理",
+        "entity": "单门店 / 单经营日期",
+        "suggestedLabels": [
+          "城市：待配置",
+          "商圈：待配置",
+          "门店标签：待配置"
+        ]
+      },
+      "owner": "收益经理 / 数据负责人",
+      "riskLevel": "medium",
+      "approvalRequired": false,
+      "successMetrics": [
+        "监测覆盖率",
+        "异常日期发现时效",
+        "数据刷新成功率"
+      ],
+      "openItems": [
+        "通过小范围试用验证参数效果，并保留人工审批记录"
+      ],
+      "sourceSteps": [
+        {
+          "stepId": "STEP-01",
+          "description": "每天早上检查负责门店未来经营日期"
+        }
+      ],
+      "governance": {
+        "strategyApprovalStatus": "not_approved",
+        "requiredApprovalRole": "收益策略负责人",
+        "workflowReviewedBy": "收益经理（比赛演示）",
+        "promotionRule": "完成参数确认和小范围业务验证后，方可升级为已审批策略。",
+        "businessConditionsStatus": "completed"
+      },
+      "resolvedItems": [
+        "确认数据刷新频率、监测范围和异常通知规则",
+        "竞对数据来源与口径"
+      ]
+    },
+    {
+      "strategyId": "STR-002",
+      "strategyName": "高热与异常日期筛选策略",
+      "strategyType": "筛选规则",
+      "version": "0.2-pilot",
+      "status": "pilot_ready",
+      "statusLabel": "可进入试用",
+      "businessPurpose": "从大量经营日期中稳定筛出值得进一步分析的候选日期。",
+      "triggerCondition": "OCC、Pickup、提前期和剩余库存达到业务设定的组合条件。",
+      "recommendedAction": "按 OCC、提前期和剩余库存筛选可能异常高热的日期",
+      "applicableScope": {
+        "domain": "酒旅收益管理",
+        "entity": "单门店 / 单经营日期",
+        "suggestedLabels": [
+          "城市：待配置",
+          "商圈：待配置",
+          "门店标签：待配置"
+        ]
+      },
+      "owner": "收益策略负责人",
+      "riskLevel": "medium",
+      "approvalRequired": true,
+      "successMetrics": [
+        "候选日期命中率",
+        "误报率",
+        "漏报率"
+      ],
+      "openItems": [
+        "通过小范围试用验证参数效果，并保留人工审批记录"
+      ],
+      "sourceSteps": [
+        {
+          "stepId": "STEP-03",
+          "description": "按 OCC、提前期和剩余库存筛选可能异常高热的日期"
+        }
+      ],
+      "governance": {
+        "strategyApprovalStatus": "not_approved",
+        "requiredApprovalRole": "收益策略负责人",
+        "workflowReviewedBy": "收益经理（比赛演示）",
+        "promotionRule": "完成参数确认和小范围业务验证后，方可升级为已审批策略。",
+        "businessConditionsStatus": "completed"
+      },
+      "resolvedItems": [
+        "确认不同门店和场景的 OCC、Pickup、提前期及库存阈值",
+        "高热与异常筛选阈值"
+      ]
+    },
+    {
+      "strategyId": "STR-003",
+      "strategyName": "真实市场热度与价格建议策略",
+      "strategyType": "AI 辅助判断",
+      "version": "0.2-pilot",
+      "status": "pilot_ready",
+      "statusLabel": "可进入试用",
+      "businessPurpose": "综合订单结构、竞对和需求事件，形成可解释的市场判断及价格建议。",
+      "triggerCondition": "候选日期已完成订单结构、竞对表现和周边需求信息准备。",
+      "recommendedAction": "查看订单结构，判断高 OCC 是否由协议客、团单或特殊订单导致；综合订单结构、竞对表现和活动信息，判断是否属于真实市场高热；形成涨价或保持观察的策略建议",
+      "applicableScope": {
+        "domain": "酒旅收益管理",
+        "entity": "单门店 / 单经营日期",
+        "suggestedLabels": [
+          "城市：待配置",
+          "商圈：待配置",
+          "门店标签：待配置"
+        ]
+      },
+      "owner": "收益经理 / AI 应用负责人",
+      "riskLevel": "high",
+      "approvalRequired": true,
+      "successMetrics": [
+        "判断一致性",
+        "建议采纳率",
+        "后续 Pickup 表现"
+      ],
+      "openItems": [
+        "通过小范围试用验证参数效果，并保留人工审批记录"
+      ],
+      "sourceSteps": [
+        {
+          "stepId": "STEP-04",
+          "description": "查看订单结构，判断高 OCC 是否由协议客、团单或特殊订单导致"
+        },
+        {
+          "stepId": "STEP-06",
+          "description": "综合订单结构、竞对表现和活动信息，判断是否属于真实市场高热"
+        },
+        {
+          "stepId": "STEP-07",
+          "description": "形成涨价或保持观察的策略建议"
+        }
+      ],
+      "governance": {
+        "strategyApprovalStatus": "not_approved",
+        "requiredApprovalRole": "收益策略负责人",
+        "workflowReviewedBy": "收益经理（比赛演示）",
+        "promotionRule": "完成参数确认和小范围业务验证后，方可升级为已审批策略。",
+        "businessConditionsStatus": "completed"
+      },
+      "resolvedItems": [
+        "确认市场高热判断标准、证据要求和可复核历史案例",
+        "竞对数据来源与口径",
+        "市场高热判断标准与历史案例"
+      ]
+    },
+    {
+      "strategyId": "STR-004",
+      "strategyName": "价格调整人工审批策略",
+      "strategyType": "人工门禁",
+      "version": "0.2-pilot",
+      "status": "pilot_ready",
+      "statusLabel": "可进入试用",
+      "businessPurpose": "保留经营责任，防止未经确认的市场判断或价格幅度直接执行。",
+      "triggerCondition": "系统已经形成市场热度判断或价格调整建议。",
+      "recommendedAction": "由收益经理人工确认市场高热判断与价格调整幅度",
+      "applicableScope": {
+        "domain": "酒旅收益管理",
+        "entity": "单门店 / 单经营日期",
+        "suggestedLabels": [
+          "城市：待配置",
+          "商圈：待配置",
+          "门店标签：待配置"
+        ]
+      },
+      "owner": "收益经理 / 业务负责人",
+      "riskLevel": "high",
+      "approvalRequired": true,
+      "successMetrics": [
+        "审批时效",
+        "调整退回率",
+        "越权执行次数"
+      ],
+      "openItems": [
+        "通过小范围试用验证参数效果，并保留人工审批记录"
+      ],
+      "sourceSteps": [
+        {
+          "stepId": "STEP-08",
+          "description": "由收益经理人工确认市场高热判断与价格调整幅度"
+        }
+      ],
+      "governance": {
+        "strategyApprovalStatus": "not_approved",
+        "requiredApprovalRole": "收益策略负责人",
+        "workflowReviewedBy": "收益经理（比赛演示）",
+        "promotionRule": "完成参数确认和小范围业务验证后，方可升级为已审批策略。",
+        "businessConditionsStatus": "completed"
+      },
+      "resolvedItems": [
+        "确认审批人、可选项、超时处理和审计要求",
+        "调价接口、权限与回滚机制"
+      ]
+    },
+    {
+      "strategyId": "STR-005",
+      "strategyName": "价格调整执行控制策略",
+      "strategyType": "执行控制",
+      "version": "0.2-pilot",
+      "status": "pilot_ready",
+      "statusLabel": "可进入试用",
+      "businessPurpose": "确保真实价格动作只在权限、底线和回滚条件完整时发生。",
+      "triggerCondition": "收益负责人审批通过，并且调价权限、价格底线和回滚方案已经确认。",
+      "recommendedAction": "确认后执行价格调整",
+      "applicableScope": {
+        "domain": "酒旅收益管理",
+        "entity": "单门店 / 单经营日期",
+        "suggestedLabels": [
+          "城市：待配置",
+          "商圈：待配置",
+          "门店标签：待配置"
+        ]
+      },
+      "owner": "收益经理 / 系统负责人",
+      "riskLevel": "high",
+      "approvalRequired": true,
+      "successMetrics": [
+        "ADR",
+        "RP",
+        "价格回滚率",
+        "执行失败率"
+      ],
+      "openItems": [
+        "通过小范围试用验证参数效果，并保留人工审批记录"
+      ],
+      "sourceSteps": [
+        {
+          "stepId": "STEP-09",
+          "description": "确认后执行价格调整"
+        }
+      ],
+      "governance": {
+        "strategyApprovalStatus": "not_approved",
+        "requiredApprovalRole": "收益策略负责人",
+        "workflowReviewedBy": "收益经理（比赛演示）",
+        "promotionRule": "完成参数确认和小范围业务验证后，方可升级为已审批策略。",
+        "businessConditionsStatus": "completed"
+      },
+      "resolvedItems": [
+        "确认调价权限、价格底线、执行接口和回滚方案",
+        "调价接口、权限与回滚机制"
+      ]
+    },
+    {
+      "strategyId": "STR-006",
+      "strategyName": "调价后观察与效果复盘策略",
+      "strategyType": "反馈学习",
+      "version": "0.2-pilot",
+      "status": "pilot_ready",
+      "statusLabel": "可进入试用",
+      "businessPurpose": "观察价格试探效果，决定继续上探、保持或回调，并沉淀本轮结果。",
+      "triggerCondition": "价格动作完成后进入观察窗口，或目标经营日期已经结束。",
+      "recommendedAction": "一小时后重新观察 Pickup、取消、剩余库存和竞对价格变化；评估价格试探是否成功，决定继续上探、保持观察或价格回调；直到目标日期结束后，记录最终 RP、ADR、OCC 和满房时间并完成复盘",
+      "applicableScope": {
+        "domain": "酒旅收益管理",
+        "entity": "单门店 / 单经营日期",
+        "suggestedLabels": [
+          "城市：待配置",
+          "商圈：待配置",
+          "门店标签：待配置"
+        ]
+      },
+      "owner": "收益经理",
+      "riskLevel": "medium",
+      "approvalRequired": true,
+      "successMetrics": [
+        "OCC",
+        "ADR",
+        "RP",
+        "Pickup",
+        "满房时间",
+        "复盘完成率"
+      ],
+      "openItems": [
+        "通过小范围试用验证参数效果，并保留人工审批记录"
+      ],
+      "sourceSteps": [
+        {
+          "stepId": "STEP-10",
+          "description": "一小时后重新观察 Pickup、取消、剩余库存和竞对价格变化"
+        },
+        {
+          "stepId": "STEP-11",
+          "description": "评估价格试探是否成功，决定继续上探、保持观察或价格回调"
+        },
+        {
+          "stepId": "STEP-12",
+          "description": "直到目标日期结束后，记录最终 RP、ADR、OCC 和满房时间并完成复盘"
+        }
+      ],
+      "governance": {
+        "strategyApprovalStatus": "not_approved",
+        "requiredApprovalRole": "收益策略负责人",
+        "workflowReviewedBy": "收益经理（比赛演示）",
+        "promotionRule": "完成参数确认和小范围业务验证后，方可升级为已审批策略。",
+        "businessConditionsStatus": "completed"
+      },
+      "resolvedItems": [
+        "确认观察窗口、成功标准、退出条件和效果指标口径",
+        "竞对数据来源与口径"
+      ]
+    }
+  ],
+  "boundaryNotice": "业务条件和 Workflow 质量检查已经通过，可进入受控的小范围试用；这不代表策略效果已经验证，也不允许绕过人工审批或自动调价。",
+  "nextAction": "选择少量历史案例或影子门店验证效果，完成后再决定是否正式审批。",
+  "businessConditions": {
+    "screening": {
+      "occThresholdPercent": 85.0,
+      "pickupThresholdRooms": 5.0,
+      "leadTimeDays": 7,
+      "minRemainingInventory": 5
+    },
+    "judgment": {
+      "minEvidenceSources": 2,
+      "excludeNonMarketOrders": true,
+      "requireExternalDemandEvidence": true,
+      "standardDescription": "排除协议客、团单及特殊订单造成的虚高，并要求至少一项竞对或周边需求证据。"
+    },
+    "execution": {
+      "approvalOwner": "收益经理",
+      "executionMode": "现有调价后台由收益经理人工审批并执行",
+      "priceFloor": 280.0,
+      "maxIncreasePercent": 20.0,
+      "rollbackRule": "调价后一小时 Pickup 未增长或取消率异常上升时，立即恢复原价格并记录原因。"
+    }
+  }
+}

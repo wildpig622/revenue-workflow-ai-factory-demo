@@ -1,0 +1,146 @@
+{
+  "workflowId": null,
+  "workflowName": "Cancellation Revenue Recovery Workflow",
+  "schemaVersion": "0.2.1",
+  "overallStatus": "BLOCK",
+  "checks": [
+    {
+      "validator": "Structure Validator",
+      "status": "PASS"
+    },
+    {
+      "validator": "Reference Validator",
+      "status": "PASS"
+    },
+    {
+      "validator": "Graph Validator",
+      "status": "PASS"
+    },
+    {
+      "validator": "Branch Validator",
+      "status": "PASS"
+    },
+    {
+      "validator": "Safety Validator",
+      "status": "PASS"
+    },
+    {
+      "validator": "Human Judgment Validator",
+      "status": "BLOCK"
+    }
+  ],
+  "issues": [
+    {
+      "issueId": "VAL-0001",
+      "validator": "human_judgment",
+      "severity": "BLOCK",
+      "code": "HUMAN_JUDGMENT_UNRESOLVED_HAS_DEFAULT",
+      "location": "dataInputs[0].configurableParameters[0].defaultValue",
+      "message": "Unresolved parameter 'STORE_CANCEL_THRESHOLD' must not define a default value.",
+      "suggestedFix": "Set defaultValue to null and keep the parameter behind a human gate."
+    },
+    {
+      "issueId": "VAL-0002",
+      "validator": "human_judgment",
+      "severity": "BLOCK",
+      "code": "HUMAN_JUDGMENT_UNRESOLVED_PARAMETER",
+      "location": "dataInputs[0].configurableParameters[0].validationStatus",
+      "message": "Parameter 'STORE_CANCEL_THRESHOLD' is unresolved and cannot be used for automatic execution.",
+      "suggestedFix": "Validate the parameter value or route the workflow through human-reviewed mode."
+    },
+    {
+      "issueId": "VAL-0003",
+      "validator": "human_judgment",
+      "severity": "BLOCK",
+      "code": "HUMAN_JUDGMENT_UNRESOLVED_PARAMETER",
+      "location": "dataInputs[0].configurableParameters[1].validationStatus",
+      "message": "Parameter 'STORE_CANCEL_WINDOW_MINUTES' is unresolved and cannot be used for automatic execution.",
+      "suggestedFix": "Validate the parameter value or route the workflow through human-reviewed mode."
+    }
+  ],
+  "businessSummary": {
+    "status": "BLOCK",
+    "verdict": "暂不允许自动执行",
+    "headline": "该 Workflow 存在不应自动执行的风险",
+    "summary": "发现 3 个需处理问题，质量门禁已阻止其进入自动执行。",
+    "impact": "如果跳过门禁，可能出现流程中断、错误决策或突破经营底线。",
+    "primaryAction": "按风险清单完成修复，然后重新提交评审。",
+    "issueCount": 3,
+    "issues": [
+      {
+        "issueId": "VAL-0001",
+        "severity": "BLOCK",
+        "validator": "human_judgment",
+        "title": "未确认参数被预填为可执行值",
+        "impact": "未确认的阈值或经验可能被 AI 当成确定规则执行。",
+        "owner": "业务 / 收益负责人",
+        "action": "由业务负责人确认参数，或保留人工审批门禁。"
+      },
+      {
+        "issueId": "VAL-0002",
+        "severity": "BLOCK",
+        "validator": "human_judgment",
+        "title": "关键经营参数尚未确认",
+        "impact": "未确认的阈值或经验可能被 AI 当成确定规则执行。",
+        "owner": "业务 / 收益负责人",
+        "action": "由业务负责人确认参数，或保留人工审批门禁。"
+      },
+      {
+        "issueId": "VAL-0003",
+        "severity": "BLOCK",
+        "validator": "human_judgment",
+        "title": "关键经营参数尚未确认",
+        "impact": "未确认的阈值或经验可能被 AI 当成确定规则执行。",
+        "owner": "业务 / 收益负责人",
+        "action": "由业务负责人确认参数，或保留人工审批门禁。"
+      }
+    ],
+    "checkpoints": [
+      {
+        "key": "structure",
+        "name": "流程信息完整性",
+        "question": "必要的业务信息是否齐全",
+        "status": "PASS",
+        "technicalName": "Structure Validator"
+      },
+      {
+        "key": "reference",
+        "name": "流程环节衔接",
+        "question": "每个环节是否连到正确对象",
+        "status": "PASS",
+        "technicalName": "Reference Validator"
+      },
+      {
+        "key": "graph",
+        "name": "全流程可达性",
+        "question": "流程能否从开始走到安全结束",
+        "status": "PASS",
+        "technicalName": "Graph Validator"
+      },
+      {
+        "key": "branch",
+        "name": "经营分支明确性",
+        "question": "不同经营结果是否有唯一处理路径",
+        "status": "PASS",
+        "technicalName": "Branch Validator"
+      },
+      {
+        "key": "safety",
+        "name": "经营底线与安全退出",
+        "question": "决策是否遵守不可突破的经营约束",
+        "status": "PASS",
+        "technicalName": "Safety Validator"
+      },
+      {
+        "key": "human_judgment",
+        "name": "人工经验确认",
+        "question": "未验证的业务经验是否被误当成自动规则",
+        "status": "BLOCK",
+        "technicalName": "Human Judgment Validator"
+      }
+    ],
+    "boundaryNote": "本评审只判断 Workflow 能否安全进入下一阶段，不判断业务策略是否最优。"
+  },
+  "humanReadableReport": "Workflow: Cancellation Revenue Recovery Workflow\nSchema Version: 0.2.1\n\nValidation Result:\nStructure Validator      PASS\nReference Validator      PASS\nGraph Validator          PASS\nBranch Validator         PASS\nSafety Validator         PASS\nHuman Judgment Validator BLOCK\n\nOverall Status: BLOCK\n\nIssues:\n- VAL-0001 [BLOCK] HUMAN_JUDGMENT_UNRESOLVED_HAS_DEFAULT @ dataInputs[0].configurableParameters[0].defaultValue: Unresolved parameter 'STORE_CANCEL_THRESHOLD' must not define a default value. Fix: Set defaultValue to null and keep the parameter behind a human gate.\n- VAL-0002 [BLOCK] HUMAN_JUDGMENT_UNRESOLVED_PARAMETER @ dataInputs[0].configurableParameters[0].validationStatus: Parameter 'STORE_CANCEL_THRESHOLD' is unresolved and cannot be used for automatic execution. Fix: Validate the parameter value or route the workflow through human-reviewed mode.\n- VAL-0003 [BLOCK] HUMAN_JUDGMENT_UNRESOLVED_PARAMETER @ dataInputs[0].configurableParameters[1].validationStatus: Parameter 'STORE_CANCEL_WINDOW_MINUTES' is unresolved and cannot be used for automatic execution. Fix: Validate the parameter value or route the workflow through human-reviewed mode.",
+  "sourceName": "TEST-05 · Unresolved parameter has defaultValue=2"
+}

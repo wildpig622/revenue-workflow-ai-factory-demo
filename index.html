@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>收益业务流程 AI 化分析</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f2f5f8;
+      --surface: #fff;
+      --soft: #f7f9fb;
+      --ink: #172331;
+      --muted: #617184;
+      --line: #dbe3eb;
+      --navy: #153f62;
+      --navy-2: #0d304e;
+      --navy-soft: #eaf2f8;
+      --green: #17633b;
+      --green-bg: #e1f4e8;
+      --purple: #65479a;
+      --purple-bg: #eee8fa;
+      --amber: #775300;
+      --amber-bg: #fff0c5;
+      --red: #982b25;
+      --red-bg: #fee4e1;
+      --teal: #12616a;
+      --teal-bg: #dff2f2;
+      --shadow: 0 18px 55px rgba(28, 48, 70, .10);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --bg: #0d131a;
+        --surface: #141c26;
+        --soft: #101821;
+        --ink: #edf2f7;
+        --muted: #9aabba;
+        --line: #2d3947;
+        --navy: #86b9e3;
+        --navy-2: #a5cef0;
+        --navy-soft: #172b3b;
+        --green: #8ee0b1;
+        --green-bg: #173729;
+        --purple: #cfb4ff;
+        --purple-bg: #302442;
+        --amber: #ffd778;
+        --amber-bg: #3b2e0d;
+        --red: #ffb4ae;
+        --red-bg: #442326;
+        --teal: #8bd9df;
+        --teal-bg: #17343a;
+        --shadow: 0 18px 55px rgba(0, 0, 0, .32);
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; color: var(--ink); background: var(--bg); font-family: Inter, "Segoe UI", "Microsoft YaHei", sans-serif; line-height: 1.55; }
+    button, input, textarea, select { font: inherit; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid color-mix(in srgb, var(--navy) 28%, transparent); outline-offset: 2px; }
+    h1, h2, h3, p { margin: 0; }
+    a { color: inherit; text-decoration: none; }
+    .muted { color: var(--muted); }
+    .small { font-size: .82rem; }
+    .app-header { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 72px; padding: 12px max(20px, calc((100% - 1200px) / 2)); background: color-mix(in srgb, var(--surface) 94%, transparent); border-bottom: 1px solid var(--line); backdrop-filter: blur(14px); }
+    .brand, .header-actions, .nav, .actions, .step-top, .gate-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .logo { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; color: #fff; background: linear-gradient(145deg, #1d5a87, #123955); font-weight: 800; box-shadow: 0 8px 22px rgba(21, 63, 98, .25); }
+    .brand h1 { font-size: 1.04rem; }
+    .brand p { color: var(--muted); font-size: .8rem; }
+    .nav a { padding: 7px 10px; color: var(--muted); border-radius: 9px; font-size: .84rem; font-weight: 700; }
+    .nav a:hover { background: var(--soft); }
+    .nav a.active { color: var(--navy); background: var(--navy-soft); }
+    main { width: min(1200px, calc(100% - 32px)); margin: 28px auto 56px; }
+    .hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr); gap: 24px; align-items: center; margin-bottom: 20px; padding: 28px; color: #fff; background: linear-gradient(135deg, #123a59, #1d5a87); border-radius: 20px; box-shadow: var(--shadow); }
+    .eyebrow { color: var(--navy); font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .hero .eyebrow { color: #bfe0fa; }
+    .hero h2 { max-width: 760px; margin: 6px 0 9px; font-size: clamp(1.65rem, 3vw, 2.45rem); line-height: 1.2; }
+    .hero p { color: #dcecf8; }
+    .journey { display: grid; gap: 10px; }
+    .journey-item { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: center; padding: 9px 10px; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.16); border-radius: 11px; }
+    .journey-number { display: grid; place-items: center; width: 30px; height: 30px; color: #143c5c; background: #fff; border-radius: 50%; font-size: .78rem; font-weight: 800; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+    .input-panel { display: grid; grid-template-columns: minmax(0, 1fr) 255px; margin-bottom: 20px; }
+    .editor { padding: 20px; }
+    .editor-head { display: flex; align-items: end; justify-content: space-between; gap: 15px; margin-bottom: 13px; }
+    label { display: grid; gap: 6px; color: var(--muted); font-size: .8rem; font-weight: 700; }
+    input, textarea, select { width: 100%; padding: 10px 12px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+    textarea { min-height: 260px; resize: vertical; line-height: 1.65; }
+    .editor-grid { display: grid; grid-template-columns: minmax(220px, .38fr) minmax(0, 1fr); gap: 12px; }
+    button, .button-link { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 42px; padding: 9px 13px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; font-weight: 700; }
+    button:hover, .button-link:hover { background: var(--soft); }
+    button.primary { color: #fff; background: #153f62; border-color: transparent; }
+    button.primary:hover { background: #0d304e; }
+    button:disabled { cursor: wait; opacity: .65; }
+    .button-link[hidden] { display: none; }
+    .input-side { display: grid; align-content: start; gap: 15px; padding: 20px; background: var(--soft); border-left: 1px solid var(--line); }
+    .input-side ol { margin: 0; padding-left: 20px; color: var(--muted); font-size: .84rem; }
+    .input-side li + li { margin-top: 7px; }
+    .notice { padding: 12px; color: var(--muted); background: var(--navy-soft); border-radius: 10px; font-size: .79rem; }
+    .error { margin-bottom: 16px; padding: 12px 14px; color: var(--red); background: var(--red-bg); border: 1px solid color-mix(in srgb, var(--red) 34%, transparent); border-radius: 11px; }
+    .results[hidden] { display: none; }
+    .result-head { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin: 26px 0 12px; }
+    .result-head h2 { font-size: 1.25rem; }
+    .stats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-bottom: 20px; }
+    .stat { display: grid; gap: 4px; min-width: 0; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 13px; }
+    .stat strong { font-size: 1.4rem; }
+    .stat span { color: var(--muted); font-size: .76rem; }
+    .review-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, .8fr); gap: 18px; align-items: center; margin-bottom: 20px; padding: 18px; border-left: 5px solid var(--amber); }
+    .review-panel.confirmed { border-left-color: var(--green); }
+    .review-copy { display: grid; gap: 7px; }
+    .review-title-row { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+    .review-state { padding: 5px 9px; color: var(--amber); background: var(--amber-bg); border-radius: 999px; font-size: .76rem; font-weight: 800; }
+    .review-panel.confirmed .review-state { color: var(--green); background: var(--green-bg); }
+    .review-controls { display: grid; grid-template-columns: minmax(150px, .6fr) minmax(190px, 1fr) auto; gap: 9px; align-items: end; }
+    .review-controls button { min-width: 160px; }
+    .readiness-panel { display: grid; gap: 16px; margin-bottom: 20px; padding: 18px; border-left: 5px solid var(--red); }
+    .readiness-panel[hidden] { display: none; }
+    .readiness-panel.complete { border-left-color: var(--green); }
+    .readiness-head { display: flex; align-items: start; justify-content: space-between; gap: 18px; }
+    .readiness-copy { display: grid; gap: 6px; }
+    .readiness-state { flex: 0 0 auto; padding: 5px 9px; color: var(--red); background: var(--red-bg); border-radius: 999px; font-size: .76rem; font-weight: 800; }
+    .readiness-panel.complete .readiness-state { color: var(--green); background: var(--green-bg); }
+    .readiness-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
+    .condition-group { display: grid; align-content: start; gap: 10px; padding: 13px; background: var(--soft); border: 1px solid var(--line); border-radius: 11px; }
+    .condition-group h3 { font-size: .92rem; }
+    .condition-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .condition-group textarea { min-height: 82px; }
+    .check-label { display: flex; grid-column: 1 / -1; align-items: start; gap: 8px; color: var(--ink); font-size: .78rem; font-weight: 600; }
+    .check-label input { width: auto; margin-top: 3px; }
+    .span-2 { grid-column: 1 / -1; }
+    .readiness-actions { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding-top: 2px; }
+    .readiness-actions p { max-width: 760px; }
+    .main-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+    .step-list { display: grid; }
+    .step { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 13px; padding: 17px 18px; border-bottom: 1px solid var(--line); }
+    .step:last-child { border-bottom: 0; }
+    .step-no { display: grid; place-items: center; width: 36px; height: 36px; color: var(--navy); background: var(--navy-soft); border-radius: 11px; font-size: .8rem; font-weight: 800; }
+    .step-body { display: grid; gap: 9px; min-width: 0; }
+    .step-top { justify-content: space-between; align-items: start; }
+    .step-title { max-width: 680px; font-size: .96rem; line-height: 1.45; }
+    .assignment-editor { display: grid; grid-template-columns: minmax(170px, 230px) minmax(0, 1fr); gap: 10px; align-items: end; }
+    .assignment-editor label { color: var(--navy); }
+    .tag { display: inline-flex; align-items: center; padding: 5px 9px; border-radius: 999px; font-size: .76rem; font-weight: 750; white-space: nowrap; }
+    .tag.data_query, .tag.rule_engine, .tag.observation { color: var(--green); background: var(--green-bg); }
+    .tag.ai_assist, .tag.evaluation { color: var(--purple); background: var(--purple-bg); }
+    .tag.human_gate { color: var(--amber); background: var(--amber-bg); }
+    .tag.system_action { color: var(--teal); background: var(--teal-bg); }
+    .step-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .detail-box { padding: 10px 11px; background: var(--soft); border-radius: 9px; }
+    .detail-box strong { display: block; margin-bottom: 3px; color: var(--muted); font-size: .73rem; }
+    .side-stack { display: grid; gap: 16px; }
+    .side-panel { padding: 18px; }
+    .gap-list { display: grid; gap: 11px; margin-top: 13px; }
+    .gap { padding: 12px; background: var(--soft); border-left: 3px solid var(--amber); border-radius: 0 10px 10px 0; }
+    .gap h3 { margin-bottom: 4px; font-size: .9rem; }
+    .gate { display: grid; gap: 11px; }
+    .gate-top { justify-content: space-between; align-items: start; }
+    .gate-status { padding: 5px 9px; border-radius: 999px; font-size: .76rem; font-weight: 800; }
+    .gate-status.block { color: var(--red); background: var(--red-bg); }
+    .gate-status.warning { color: var(--amber); background: var(--amber-bg); }
+    .gate-status.pass { color: var(--green); background: var(--green-bg); }
+    .gate-status.waiting { color: var(--amber); background: var(--amber-bg); }
+    .gate-note { padding: 11px; background: var(--soft); border-radius: 9px; }
+    details.artifact { margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    details.artifact[hidden] { display: none; }
+    details.artifact > summary { display: flex; align-items: center; justify-content: space-between; padding: 15px 17px; cursor: pointer; list-style: none; font-weight: 750; }
+    details.artifact > summary::-webkit-details-marker { display: none; }
+    details.artifact > summary::after { content: "+"; color: var(--muted); font-size: 1.2rem; }
+    details.artifact[open] > summary::after { content: "−"; }
+    pre { max-height: 460px; overflow: auto; margin: 0; padding: 17px; color: var(--ink); background: var(--soft); border-top: 1px solid var(--line); font: .79rem/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .loading::after { content: ""; width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 980px) { .hero, .input-panel, .main-grid, .review-panel { grid-template-columns: 1fr; } .readiness-grid { grid-template-columns: 1fr 1fr; } .input-side { border-left: 0; border-top: 1px solid var(--line); } .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 720px) { .app-header, .readiness-head, .readiness-actions { align-items: flex-start; flex-direction: column; } .header-actions { width: 100%; justify-content: space-between; } .hero { padding: 21px; } .editor-grid, .step-detail, .assignment-editor, .review-controls, .readiness-grid { grid-template-columns: 1fr; } .editor-head, .result-head { align-items: flex-start; flex-direction: column; } .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .actions { width: 100%; } .actions > * { flex: 1; } .readiness-actions button { width: 100%; } }
+    @media (max-width: 460px) { main { width: min(100% - 20px, 1200px); } .stats { grid-template-columns: 1fr 1fr; } .step { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">AI</div>
+      <div><h1>Revenue Workflow AI Factory</h1><p>酒旅收益业务流程 AI 化工具</p></div>
+    </div>
+    <div class="header-actions">
+      <nav class="nav" aria-label="产品导航"><a href="./demo.html">比赛导览</a><a class="active" href="./index.html">流程 AI 化</a><a href="./strategies.html">策略集</a><a href="./validator.html">质量门禁</a></nav>
+      <span class="muted small">MVP v0.1</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <span class="eyebrow">比赛主线</span>
+        <h2>把一条人工收益流程，拆成可以落地的 AI 协作方案</h2>
+        <p>让 AI 先提出分工建议，由收益负责人逐步复核，再生成经过质量检查的 Workflow Blueprint。</p>
+      </div>
+      <div class="journey" aria-label="产品流程">
+        <div class="journey-item"><span class="journey-number">1</span><strong>输入现有收益业务流程</strong></div>
+        <div class="journey-item"><span class="journey-number">2</span><strong>生成 AI 化与自动化机会地图</strong></div>
+        <div class="journey-item"><span class="journey-number">3</span><strong>收益负责人修改并确认</strong></div>
+        <div class="journey-item"><span class="journey-number">4</span><strong>输出 Workflow 与候选策略集</strong></div>
+        <div class="journey-item"><span class="journey-number">5</span><strong>通过 Validator 拦截未确认风险</strong></div>
+      </div>
+    </section>
+
+    <section class="panel input-panel">
+      <div class="editor">
+        <div class="editor-head">
+          <div><span class="eyebrow">输入</span><h2>描述现在如何完成这项工作</h2><p class="muted small">按实际顺序逐步写下，不需要使用技术语言。</p></div>
+          <button id="load-example" type="button">载入 Case A</button>
+        </div>
+        <div class="editor-grid">
+          <label for="process-title">流程名称<input id="process-title" type="text" maxlength="120" placeholder="例如：高热日期收益决策循环"></label>
+          <label for="process-text">业务步骤<textarea id="process-text" maxlength="20000" placeholder="1. 每天早上查看未来7天 OCC…&#10;2. 筛选异常日期…&#10;3. 查看竞对与订单结构…"></textarea></label>
+        </div>
+      </div>
+      <aside class="input-side">
+        <div><span class="eyebrow">分析会输出</span><h3>五类落地结果</h3></div>
+        <ol><li>可自动化的数据与规则步骤</li><li>适合 AI 辅助判断的步骤</li><li>必须保留的人工门禁</li><li>待补齐的数据、参数与接口</li><li>Workflow 与候选策略卡片</li></ol>
+        <button id="analyze" class="primary" type="button">生成 AI 分析建议</button>
+        <div class="notice">当前为 GitHub Pages 比赛展示版，使用同版 Python 引擎预先生成的 Case A 真实结果。任何建议都必须由收益负责人复核。</div>
+      </aside>
+    </section>
+
+    <div id="error" class="error" role="alert" hidden></div>
+
+    <section id="results" class="results" hidden>
+      <div class="result-head">
+        <div><span class="eyebrow">分析结果</span><h2 id="result-title">收益 Workflow AI 化机会地图</h2><p id="method-notice" class="muted small"></p></div>
+        <div class="actions"><button id="download-analysis" type="button">下载完整分析</button><button id="download-blueprint" type="button" disabled>下载 Blueprint</button><a id="open-strategies" class="button-link" href="./strategies.html" hidden>查看策略集</a></div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><strong id="stat-total">—</strong><span>原流程步骤</span></div>
+        <div class="stat"><strong id="stat-auto">—</strong><span>自动化候选</span></div>
+        <div class="stat"><strong id="stat-ai">—</strong><span>AI 辅助 / 复盘</span></div>
+        <div class="stat"><strong id="stat-human">—</strong><span>必须人工</span></div>
+        <div class="stat"><strong id="stat-tool">—</strong><span>待工具集成</span></div>
+        <div class="stat"><strong id="stat-gaps">—</strong><span>待补齐条件</span></div>
+      </div>
+
+      <section id="review-panel" class="panel review-panel">
+        <div class="review-copy">
+          <div class="review-title-row"><span class="eyebrow">人工复核</span><span id="review-state" class="review-state">等待业务确认</span></div>
+          <h2 id="review-headline">检查 AI 对每个步骤的分工建议</h2>
+          <p id="review-next-action" class="muted small">你可以修改下方每一步的分类。确认人签名后，系统才会生成 Blueprint 并进入质量门禁。</p>
+        </div>
+        <div class="review-controls">
+          <label for="reviewed-by">确认人<input id="reviewed-by" type="text" maxlength="120" value="收益经理（演示）"></label>
+          <label for="review-note">复核说明<input id="review-note" type="text" maxlength="2000" placeholder="例如：已核对 Case A 各步骤分工"></label>
+          <button id="generate-blueprint" class="primary" type="button">确认并生成成果</button>
+        </div>
+      </section>
+
+      <section id="readiness-panel" class="panel readiness-panel" hidden>
+        <div class="readiness-head">
+          <div class="readiness-copy">
+            <div class="review-title-row"><span class="eyebrow">业务条件补齐</span><span id="readiness-state" class="readiness-state">质量门禁 BLOCK</span></div>
+            <h2 id="readiness-headline">把未确认经验变成可审计的试用条件</h2>
+            <p id="readiness-description" class="muted small">以下数值是比赛演示参考值，不是部门正式策略。收益负责人可修改后再次送检。</p>
+          </div>
+          <span class="muted small">目标：BLOCK → PASS → 允许进入小范围试用</span>
+        </div>
+
+        <div class="readiness-grid">
+          <section class="condition-group">
+            <h3>1 · 高热筛选阈值</h3>
+            <div class="condition-fields">
+              <label for="occ-threshold">OCC 触发值（%）<input id="occ-threshold" type="number" min="1" max="100" step="1" value="85"></label>
+              <label for="pickup-threshold">Pickup 触发值（间）<input id="pickup-threshold" type="number" min="0" max="1000" step="1" value="5"></label>
+              <label for="lead-time-days">最大提前期（天）<input id="lead-time-days" type="number" min="0" max="365" step="1" value="7"></label>
+              <label for="remaining-inventory">最低剩余库存（间）<input id="remaining-inventory" type="number" min="0" max="10000" step="1" value="5"></label>
+            </div>
+          </section>
+
+          <section class="condition-group">
+            <h3>2 · 市场判断证据</h3>
+            <div class="condition-fields">
+              <label for="evidence-count">最低证据来源数<input id="evidence-count" type="number" min="1" max="10" step="1" value="2"></label>
+              <label class="check-label"><input id="exclude-orders" type="checkbox" checked>排除协议客、团单和特殊订单造成的虚高</label>
+              <label class="check-label"><input id="require-demand-evidence" type="checkbox" checked>至少包含竞对或周边需求证据</label>
+              <label class="span-2" for="judgment-standard">判断标准说明<textarea id="judgment-standard" maxlength="1000">订单结构不能由协议客、团单或特殊订单单独造成，并至少有竞对价格、库存或周边活动中的两类证据支持。</textarea></label>
+            </div>
+          </section>
+
+          <section class="condition-group">
+            <h3>3 · 权限、底线与回滚</h3>
+            <div class="condition-fields">
+              <label for="approval-owner">调价审批人<input id="approval-owner" type="text" maxlength="120" value="收益经理（比赛演示）"></label>
+              <label for="execution-mode">执行方式<input id="execution-mode" type="text" maxlength="300" value="现有调价后台由收益经理人工执行"></label>
+              <label for="price-floor">价格底线（元）<input id="price-floor" type="number" min="1" max="100000" step="1" value="280"></label>
+              <label for="max-increase">单次最大涨幅（%）<input id="max-increase" type="number" min="1" max="100" step="1" value="20"></label>
+              <label class="span-2" for="rollback-rule">回滚规则<textarea id="rollback-rule" maxlength="1000">调价后一小时 Pickup 未增长或取消明显增加时，恢复至调整前价格并记录原因。</textarea></label>
+            </div>
+          </section>
+        </div>
+
+        <div class="readiness-actions">
+          <p id="readiness-boundary" class="muted small">保存后系统会把条件写入 Workflow 并重新运行全部质量检查；PASS 不代表策略最优，也不会触发自动调价。</p>
+          <button id="complete-readiness" class="primary" type="button">保存条件并再次送检</button>
+        </div>
+      </section>
+
+      <div class="main-grid">
+        <section class="panel">
+          <div class="panel-head"><div><span class="eyebrow">可编辑机会地图</span><h2>逐步确认该交给谁</h2></div><span id="automation-rate" class="muted small"></span></div>
+          <div id="step-list" class="step-list"></div>
+        </section>
+
+        <aside class="side-stack">
+          <section class="panel side-panel">
+            <span class="eyebrow">落地前置条件</span><h2>需要补齐什么</h2>
+            <div id="gap-list" class="gap-list"></div>
+          </section>
+          <section class="panel side-panel gate">
+            <div class="gate-top"><div><span class="eyebrow">Validator</span><h2>Workflow 质量门禁</h2></div><span id="gate-status" class="gate-status">—</span></div>
+            <h3 id="gate-headline">等待分析</h3>
+            <p id="gate-summary" class="muted small"></p>
+            <div class="gate-note"><strong class="small">为什么需要门禁</strong><p id="gate-impact" class="muted small"></p></div>
+            <a class="button-link" href="./validator.html">进入独立质量门禁</a>
+          </section>
+        </aside>
+      </div>
+
+      <details id="blueprint-artifact" class="artifact" hidden>
+        <summary><span>查看生成的 Workflow Blueprint</span></summary>
+        <pre id="blueprint-json"></pre>
+      </details>
+    </section>
+  </main>
+
+  <script>
+    let lastAnalysis = null;
+    const $ = selector => document.querySelector(selector);
+
+    function persistGeneratedResult() {
+      if (!lastAnalysis?.workflowBlueprint) return;
+      try {
+        localStorage.setItem("revenueWorkflowGeneratedResult", JSON.stringify(lastAnalysis));
+        if (lastAnalysis.strategySet) {
+          localStorage.setItem("revenueWorkflowStrategySet", JSON.stringify(lastAnalysis.strategySet));
+        }
+      } catch (_error) {
+        // The workflow remains usable when private browsing blocks local storage.
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
+    }
+    function setError(message) {
+      const box = $("#error");
+      box.textContent = message || "";
+      box.hidden = !message;
+    }
+    function setLoading(loading) {
+      const button = $("#analyze");
+      button.disabled = loading;
+      button.classList.toggle("loading", loading);
+      button.textContent = loading ? "正在形成分析建议" : "生成 AI 分析建议";
+    }
+    function setGenerateLoading(loading) {
+      const button = $("#generate-blueprint");
+      button.disabled = loading;
+      button.classList.toggle("loading", loading);
+      button.textContent = loading ? "正在生成并检查" : "确认并生成成果";
+    }
+    function setReadinessLoading(loading) {
+      const button = $("#complete-readiness");
+      button.disabled = loading;
+      button.classList.toggle("loading", loading);
+      button.textContent = loading
+        ? "正在写入并重新送检"
+        : (lastAnalysis?.businessReadiness?.readyForPilot ? "更新条件并再次送检" : "保存条件并再次送检");
+    }
+    async function loadExample(runAfter = false) {
+      const response = await fetch("./data/analyzer-example.json", {cache: "no-store"});
+      const example = await response.json();
+      if (!response.ok) throw new Error(example.error || "无法载入 Case A");
+      $("#process-title").value = example.title;
+      $("#process-text").value = example.process;
+      if (runAfter) await runAnalysis(false);
+    }
+    async function runAnalysis(scrollResult = true) {
+      setError("");
+      setLoading(true);
+      try {
+        const response = await fetch("./data/analyzer-analysis.json", {cache: "no-store"});
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "分析失败");
+        lastAnalysis = data;
+        renderAnalysis(scrollResult);
+      } catch (error) {
+        setError(error.message || String(error));
+      } finally {
+        setLoading(false);
+      }
+    }
+    function renderAnalysis(scrollResult) {
+      const summary = lastAnalysis.summary;
+      $("#results").hidden = false;
+      $("#result-title").textContent = `${lastAnalysis.sourceTitle} · AI 化机会地图`;
+      $("#method-notice").textContent = lastAnalysis.methodNotice;
+      $("#stat-total").textContent = summary.totalSteps;
+      $("#stat-auto").textContent = summary.automationCandidates;
+      $("#stat-ai").textContent = summary.aiAssisted;
+      $("#stat-human").textContent = summary.humanRequired;
+      $("#stat-tool").textContent = summary.toolIntegration;
+      $("#stat-gaps").textContent = summary.dataGapCount;
+      $("#automation-rate").textContent = `基于步骤分类估算：${summary.automationCandidateRate}% 为直接自动化候选`;
+      renderSteps();
+      renderGaps();
+      renderReviewState();
+      renderReadiness();
+      renderGate();
+      const hasBlueprint = Boolean(lastAnalysis.workflowBlueprint);
+      const hasStrategySet = Boolean(lastAnalysis.strategySet);
+      $("#download-blueprint").disabled = !hasBlueprint;
+      $("#open-strategies").hidden = !hasStrategySet;
+      $("#blueprint-artifact").hidden = !hasBlueprint;
+      $("#blueprint-json").textContent = hasBlueprint ? JSON.stringify(lastAnalysis.workflowBlueprint, null, 2) : "";
+      if (scrollResult) $("#results").scrollIntoView({behavior: "smooth", block: "start"});
+    }
+    function renderSteps() {
+      const list = $("#step-list");
+      list.replaceChildren();
+      lastAnalysis.steps.forEach((step, index) => {
+        const article = document.createElement("article");
+        article.className = "step";
+        article.innerHTML = `<span class="step-no">${String(step.order).padStart(2, "0")}</span><div class="step-body"><div class="step-top"><h3 class="step-title">${escapeHtml(step.originalText)}</h3><span class="tag ${escapeHtml(step.category)}">${escapeHtml(step.label)}</span></div><div class="assignment-editor"><label>业务分工<select aria-label="第 ${step.order} 步业务分工"></select></label><strong class="small">${escapeHtml(step.automationLevel)}</strong></div><div class="step-detail"><div class="detail-box"><strong>为什么这样分配</strong><p class="small">${escapeHtml(step.rationale)}</p></div><div class="detail-box"><strong>落地前要准备</strong><p class="small">${escapeHtml(step.prerequisite)}</p></div></div><p class="muted small">建议责任人：${escapeHtml(step.owner)}</p></div>`;
+        const select = article.querySelector("select");
+        lastAnalysis.categoryOptions.forEach(option => {
+          const element = document.createElement("option");
+          element.value = option.value;
+          element.textContent = option.label;
+          element.selected = option.value === step.category;
+          select.appendChild(element);
+        });
+        select.addEventListener("change", event => updateStepCategory(index, event.target.value));
+        list.appendChild(article);
+      });
+    }
+    function updateStepCategory(index, category) {
+      const option = lastAnalysis.categoryOptions.find(item => item.value === category);
+      if (!option) return;
+      lastAnalysis.steps[index] = {...lastAnalysis.steps[index], category, ...option};
+      lastAnalysis.reviewStatus = "awaiting_business_review";
+      delete lastAnalysis.review;
+      delete lastAnalysis.workflowBlueprint;
+      delete lastAnalysis.strategySet;
+      delete lastAnalysis.qualityGate;
+      delete lastAnalysis.businessReadiness;
+      const counts = Object.fromEntries(lastAnalysis.categoryOptions.map(item => [item.value, 0]));
+      lastAnalysis.steps.forEach(step => { counts[step.category] = (counts[step.category] || 0) + 1; });
+      const auto = counts.data_query + counts.rule_engine + counts.observation;
+      lastAnalysis.summary = {
+        ...lastAnalysis.summary,
+        automationCandidates: auto,
+        aiAssisted: counts.ai_assist + counts.evaluation,
+        humanRequired: counts.human_gate,
+        toolIntegration: counts.system_action,
+        automationCandidateRate: Math.round(auto * 100 / lastAnalysis.steps.length)
+      };
+      renderAnalysis(false);
+    }
+    function renderGaps() {
+      const list = $("#gap-list");
+      list.replaceChildren();
+      if (!lastAnalysis.dataGaps.length) {
+        list.innerHTML = `<p class="muted small">未识别到明显前置缺口，仍需业务负责人复核。</p>`;
+        return;
+      }
+      lastAnalysis.dataGaps.forEach(item => {
+        const box = document.createElement("article");
+        box.className = "gap";
+        box.innerHTML = `<h3>${escapeHtml(item.gap)}</h3><p class="muted small">${escapeHtml(item.why)}</p><p class="small"><strong>责任人：</strong>${escapeHtml(item.owner)}</p>`;
+        list.appendChild(box);
+      });
+    }
+    function renderGate() {
+      if (!lastAnalysis.qualityGate) {
+        const pill = $("#gate-status");
+        pill.className = "gate-status waiting";
+        pill.textContent = "等待业务确认";
+        $("#gate-headline").textContent = "尚未进入质量门禁";
+        $("#gate-summary").textContent = "系统不会在 AI 建议阶段提前生成可执行工作流。";
+        $("#gate-impact").textContent = "先由收益负责人确认分工，再检查结构、引用、分支、安全和人工判断风险。";
+        return;
+      }
+      const report = lastAnalysis.qualityGate;
+      const business = report.businessSummary;
+      const status = String(report.overallStatus || "BLOCK").toLowerCase();
+      const pill = $("#gate-status");
+      pill.className = `gate-status ${status}`;
+      pill.textContent = business.verdict;
+      $("#gate-headline").textContent = business.headline;
+      $("#gate-summary").textContent = business.summary;
+      $("#gate-impact").textContent = business.impact;
+    }
+    function renderReadiness() {
+      const panel = $("#readiness-panel");
+      const hasGeneratedWorkflow = Boolean(lastAnalysis.workflowBlueprint && lastAnalysis.qualityGate);
+      panel.hidden = !hasGeneratedWorkflow;
+      if (!hasGeneratedWorkflow) return;
+      const ready = Boolean(lastAnalysis.businessReadiness?.readyForPilot);
+      panel.classList.toggle("complete", ready);
+      $("#readiness-state").textContent = ready ? "质量门禁 PASS" : `质量门禁 ${lastAnalysis.qualityGate.overallStatus}`;
+      $("#readiness-headline").textContent = ready
+        ? "业务条件已补齐，可以进入受控小范围试用"
+        : "把未确认经验变成可审计的试用条件";
+      $("#readiness-description").textContent = ready
+        ? "阈值、判断证据、权限、价格底线与回滚规则已经写入 Workflow。"
+        : "以下数值是比赛演示参考值，不是部门正式策略。收益负责人可修改后再次送检。";
+      $("#readiness-boundary").textContent = lastAnalysis.businessReadiness?.boundaryNotice
+        || "保存后系统会把条件写入 Workflow 并重新运行全部质量检查；PASS 不代表策略最优，也不会触发自动调价。";
+      setReadinessLoading(false);
+    }
+    function renderReviewState() {
+      const confirmed = lastAnalysis.reviewStatus === "business_reviewed";
+      const panel = $("#review-panel");
+      panel.classList.toggle("confirmed", confirmed);
+      $("#review-state").textContent = confirmed ? "已完成业务确认" : "等待业务确认";
+      const strategyCount = lastAnalysis.strategySet?.summary?.totalStrategies || 0;
+      $("#review-headline").textContent = confirmed ? `已由 ${lastAnalysis.review.reviewedBy} 复核，形成 ${strategyCount} 条候选策略` : "检查 AI 对每个步骤的分工建议";
+      $("#review-next-action").textContent = confirmed
+        ? "Workflow、策略集已按复核结果生成并进入 Validator；如再次修改分类，需要重新确认。"
+        : (lastAnalysis.nextAction || "你可以修改下方每一步的分类，确认后再生成 Blueprint。");
+    }
+    async function generateBlueprint() {
+      setError("");
+      setGenerateLoading(true);
+      try {
+        const reviewer = $("#reviewed-by").value.trim();
+        if (!reviewer) throw new Error("请填写业务复核人。");
+        const response = await fetch("./data/generated-block.json", {cache: "no-store"});
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Blueprint 生成失败");
+        data.review.reviewedBy = reviewer;
+        data.review.reviewNote = $("#review-note").value;
+        data.strategySet.sourceCase.workflowReview.reviewedBy = reviewer;
+        lastAnalysis = data;
+        persistGeneratedResult();
+        renderAnalysis(false);
+        $("#review-panel").scrollIntoView({behavior: "smooth", block: "center"});
+      } catch (error) {
+        setError(error.message || String(error));
+      } finally {
+        setGenerateLoading(false);
+      }
+    }
+    function numberValue(selector) {
+      const value = $(selector).value.trim();
+      return value === "" ? null : Number(value);
+    }
+    async function completeReadiness() {
+      setError("");
+      setReadinessLoading(true);
+      try {
+        const requiredValues = [
+          numberValue("#occ-threshold"), numberValue("#pickup-threshold"),
+          numberValue("#lead-time-days"), numberValue("#remaining-inventory"),
+          numberValue("#evidence-count"), numberValue("#price-floor"),
+          numberValue("#max-increase")
+        ];
+        if (requiredValues.some(value => value === null || !Number.isFinite(value))) {
+          throw new Error("请完整填写阈值与经营底线。");
+        }
+        if (!$("#exclude-orders").checked || !$("#require-demand-evidence").checked) {
+          throw new Error("请确认两项市场判断证据要求。");
+        }
+        const response = await fetch("./data/completed-pass.json", {cache: "no-store"});
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "业务条件保存失败");
+        data.review = lastAnalysis.review;
+        data.strategySet.sourceCase.workflowReview.reviewedBy = lastAnalysis.review.reviewedBy;
+        lastAnalysis = data;
+        persistGeneratedResult();
+        renderAnalysis(false);
+        $("#readiness-panel").scrollIntoView({behavior: "smooth", block: "center"});
+      } catch (error) {
+        setError(error.message || String(error));
+      } finally {
+        setReadinessLoading(false);
+      }
+    }
+    function download(content, filename, type) {
+      const url = URL.createObjectURL(new Blob([content], {type}));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+    $("#load-example").addEventListener("click", () => loadExample(false).catch(error => setError(error.message || String(error))));
+    $("#analyze").addEventListener("click", () => runAnalysis(true));
+    $("#generate-blueprint").addEventListener("click", generateBlueprint);
+    $("#complete-readiness").addEventListener("click", completeReadiness);
+    $("#download-analysis").addEventListener("click", () => download(JSON.stringify(lastAnalysis, null, 2), "revenue-workflow-ai-analysis.json", "application/json"));
+    $("#download-blueprint").addEventListener("click", () => {
+      if (lastAnalysis?.workflowBlueprint) download(JSON.stringify(lastAnalysis.workflowBlueprint, null, 2), "revenue-workflow-blueprint.json", "application/json");
+    });
+    loadExample(true).catch(error => setError(error.message || String(error)));
+  </script>
+</body>
+</html>

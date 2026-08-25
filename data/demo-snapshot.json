@@ -1,0 +1,100 @@
+{
+  "snapshotVersion": "1.0",
+  "caseName": "高热日期收益决策循环",
+  "sourceSteps": 12,
+  "opportunitySummary": {
+    "automationCandidates": 5,
+    "aiAssisted": 5,
+    "humanRequired": 1,
+    "toolIntegration": 1
+  },
+  "strategySummary": {
+    "total": 6,
+    "pilotReady": 6,
+    "sourceCoverage": 12
+  },
+  "initialGate": {
+    "status": "BLOCK",
+    "issueCount": 3,
+    "checks": [
+      {
+        "name": "Structure Validator",
+        "status": "PASS"
+      },
+      {
+        "name": "Reference Validator",
+        "status": "PASS"
+      },
+      {
+        "name": "Graph Validator",
+        "status": "PASS"
+      },
+      {
+        "name": "Branch Validator",
+        "status": "PASS"
+      },
+      {
+        "name": "Safety Validator",
+        "status": "PASS"
+      },
+      {
+        "name": "Human Judgment Validator",
+        "status": "BLOCK"
+      }
+    ]
+  },
+  "completedGate": {
+    "status": "PASS",
+    "issueCount": 0,
+    "checks": [
+      {
+        "name": "Structure Validator",
+        "status": "PASS"
+      },
+      {
+        "name": "Reference Validator",
+        "status": "PASS"
+      },
+      {
+        "name": "Graph Validator",
+        "status": "PASS"
+      },
+      {
+        "name": "Branch Validator",
+        "status": "PASS"
+      },
+      {
+        "name": "Safety Validator",
+        "status": "PASS"
+      },
+      {
+        "name": "Human Judgment Validator",
+        "status": "PASS"
+      }
+    ]
+  },
+  "readiness": {
+    "readyForPilot": true,
+    "remainingGapCount": 1,
+    "remainingGaps": [
+      {
+        "gap": "竞对数据来源与口径",
+        "why": "需要确认竞对价格、库存的稳定数据源和刷新频率。",
+        "owner": "数据 / 产品负责人"
+      }
+    ],
+    "formalApprovalStatus": "not_approved",
+    "priceFloorConstraint": {
+      "value": 280.0,
+      "overridePermission": "never",
+      "violationHandling": "block"
+    }
+  },
+  "boundary": {
+    "pilotOnly": true,
+    "automaticPricing": false,
+    "strategyEffectProven": false,
+    "genericRuntimeIncluded": false,
+    "message": "PASS 只表示 Workflow 与业务条件具备受控小范围试用资格；不证明策略最优，不授权自动调价，正式策略审批仍未完成。"
+  }
+}

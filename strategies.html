@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>收益候选策略集</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f2f5f8;
+      --surface: #fff;
+      --soft: #f7f9fb;
+      --ink: #172331;
+      --muted: #617184;
+      --line: #dbe3eb;
+      --navy: #153f62;
+      --navy-2: #0d304e;
+      --navy-soft: #eaf2f8;
+      --green: #17633b;
+      --green-bg: #e1f4e8;
+      --amber: #775300;
+      --amber-bg: #fff0c5;
+      --red: #982b25;
+      --red-bg: #fee4e1;
+      --purple: #65479a;
+      --purple-bg: #eee8fa;
+      --shadow: 0 18px 55px rgba(28, 48, 70, .10);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --bg: #0d131a; --surface: #141c26; --soft: #101821; --ink: #edf2f7;
+        --muted: #9aabba; --line: #2d3947; --navy: #86b9e3; --navy-2: #a5cef0;
+        --navy-soft: #172b3b; --green: #8ee0b1; --green-bg: #173729;
+        --amber: #ffd778; --amber-bg: #3b2e0d; --red: #ffb4ae; --red-bg: #442326;
+        --purple: #cfb4ff; --purple-bg: #302442; --shadow: 0 18px 55px rgba(0,0,0,.32);
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; color: var(--ink); background: var(--bg); font-family: Inter, "Segoe UI", "Microsoft YaHei", sans-serif; line-height: 1.55; }
+    button { font: inherit; }
+    button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid color-mix(in srgb, var(--navy) 28%, transparent); outline-offset: 2px; }
+    h1, h2, h3, p { margin: 0; }
+    a { color: inherit; text-decoration: none; }
+    .muted { color: var(--muted); }
+    .small { font-size: .82rem; }
+    .app-header { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 72px; padding: 12px max(20px, calc((100% - 1200px) / 2)); background: color-mix(in srgb, var(--surface) 94%, transparent); border-bottom: 1px solid var(--line); backdrop-filter: blur(14px); }
+    .brand, .header-actions, .nav, .actions, .title-row, .tag-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .logo { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; color: #fff; background: linear-gradient(145deg, #1d5a87, #123955); font-weight: 800; box-shadow: 0 8px 22px rgba(21,63,98,.25); }
+    .brand h1 { font-size: 1.04rem; }
+    .brand p { color: var(--muted); font-size: .8rem; }
+    .nav a { padding: 7px 10px; color: var(--muted); border-radius: 9px; font-size: .84rem; font-weight: 700; }
+    .nav a:hover { background: var(--soft); }
+    .nav a.active { color: var(--navy); background: var(--navy-soft); }
+    main { width: min(1200px, calc(100% - 32px)); margin: 28px auto 56px; }
+    .hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr); gap: 24px; align-items: center; padding: 28px; color: #fff; background: linear-gradient(135deg, #123a59, #1d5a87); border-radius: 20px; box-shadow: var(--shadow); }
+    .eyebrow { color: var(--navy); font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .hero .eyebrow { color: #bfe0fa; }
+    .hero h2 { margin: 6px 0 9px; font-size: clamp(1.65rem, 3vw, 2.45rem); line-height: 1.2; }
+    .hero p { color: #dcecf8; }
+    .hero-note { display: grid; gap: 8px; padding: 16px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); border-radius: 13px; }
+    .hero-note strong { font-size: .95rem; }
+    .hero-note p { font-size: .82rem; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+    .empty { display: grid; place-items: center; gap: 12px; min-height: 330px; margin-top: 20px; padding: 30px; text-align: center; }
+    .empty[hidden], .content[hidden] { display: none; }
+    .empty-mark { display: grid; place-items: center; width: 62px; height: 62px; color: var(--navy); background: var(--navy-soft); border-radius: 18px; font-size: 1.4rem; font-weight: 800; }
+    button, .button-link { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 9px 13px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; font-weight: 700; }
+    button:hover, .button-link:hover { background: var(--soft); }
+    .primary { color: #fff; background: #153f62; border-color: transparent; }
+    .primary:hover { background: #0d304e; }
+    .content { margin-top: 22px; }
+    .result-head { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 12px; }
+    .result-head h2 { font-size: 1.3rem; }
+    .status { padding: 5px 9px; color: var(--amber); background: var(--amber-bg); border-radius: 999px; font-size: .76rem; font-weight: 800; }
+    .status.pilot_ready { color: var(--green); background: var(--green-bg); }
+    .stats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+    .stat { display: grid; gap: 4px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 13px; }
+    .stat strong { font-size: 1.4rem; }
+    .stat span { color: var(--muted); font-size: .76rem; }
+    .maturity { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-bottom: 16px; overflow: hidden; }
+    .stage { position: relative; padding: 16px 18px; background: var(--soft); border-right: 1px solid var(--line); }
+    .stage:last-child { border-right: 0; }
+    .stage.done { background: var(--green-bg); }
+    .stage.current { background: var(--amber-bg); }
+    .stage strong { display: block; margin-bottom: 3px; font-size: .88rem; }
+    .boundary { display: flex; align-items: start; justify-content: space-between; gap: 18px; margin-bottom: 16px; padding: 16px 18px; border-left: 5px solid var(--amber); }
+    .boundary h3 { margin-bottom: 4px; font-size: .98rem; }
+    .strategy-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+    .strategy-card { display: grid; align-content: start; gap: 14px; padding: 18px; }
+    .card-head { display: flex; align-items: start; justify-content: space-between; gap: 14px; }
+    .card-head h3 { margin-top: 4px; font-size: 1.05rem; }
+    .card-status { flex: 0 0 auto; padding: 5px 9px; border-radius: 999px; font-size: .74rem; font-weight: 800; }
+    .card-status.candidate { color: var(--purple); background: var(--purple-bg); }
+    .card-status.needs_definition { color: var(--amber); background: var(--amber-bg); }
+    .card-status.pilot_ready { color: var(--green); background: var(--green-bg); }
+    .purpose { padding: 12px; background: var(--navy-soft); border-radius: 10px; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .detail { padding: 11px; background: var(--soft); border-radius: 10px; }
+    .detail strong { display: block; margin-bottom: 4px; color: var(--muted); font-size: .73rem; }
+    .section-label { color: var(--muted); font-size: .73rem; font-weight: 800; letter-spacing: .04em; }
+    .tag { display: inline-flex; padding: 4px 8px; color: var(--navy); background: var(--navy-soft); border-radius: 999px; font-size: .73rem; font-weight: 700; }
+    .tag.metric { color: var(--green); background: var(--green-bg); }
+    .open-items { margin: 0; padding: 11px 11px 11px 30px; color: var(--amber); background: var(--amber-bg); border-radius: 10px; font-size: .8rem; }
+    .open-items li + li { margin-top: 4px; }
+    .governance { padding-top: 12px; border-top: 1px solid var(--line); }
+    details { border-top: 1px solid var(--line); padding-top: 10px; }
+    summary { color: var(--muted); cursor: pointer; font-size: .8rem; font-weight: 700; }
+    .sources { margin: 8px 0 0; padding-left: 20px; color: var(--muted); font-size: .78rem; }
+    .error { margin-top: 18px; padding: 12px 14px; color: var(--red); background: var(--red-bg); border-radius: 11px; }
+    @media (max-width: 900px) { .hero, .strategy-grid { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 680px) { .app-header, .result-head, .boundary { align-items: flex-start; flex-direction: column; } .header-actions { width: 100%; justify-content: space-between; } .hero { padding: 21px; } .stats { grid-template-columns: repeat(2, 1fr); } .maturity, .detail-grid { grid-template-columns: 1fr; } .stage { border-right: 0; border-bottom: 1px solid var(--line); } .actions { width: 100%; } .actions > * { flex: 1; } }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">AI</div>
+      <div><h1>Revenue Workflow AI Factory</h1><p>酒旅收益业务流程 AI 化工具</p></div>
+    </div>
+    <div class="header-actions">
+      <nav class="nav" aria-label="产品导航"><a href="./demo.html">比赛导览</a><a href="./index.html">流程 AI 化</a><a class="active" href="./strategies.html">策略集</a><a href="./validator.html">质量门禁</a></nav>
+      <span class="muted small">MVP v0.1</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <span class="eyebrow">比赛业务成果</span>
+        <h2>把一次业务案例，沉淀为可管理的候选策略资产</h2>
+        <p>策略卡片记录触发条件、建议动作、适用范围、指标与待补条件；它们来自已复核 Workflow，但仍需小范围验证和正式审批。</p>
+      </div>
+      <div class="hero-note">
+        <strong>策略集不是自动调价规则库</strong>
+        <p>当前输出用于内部共创和试用。系统不会因为生成了策略卡片，就绕过收益负责人或直接执行经营动作。</p>
+      </div>
+    </section>
+
+    <div id="error" class="error" role="alert" hidden></div>
+
+    <section id="empty" class="panel empty" hidden>
+      <div class="empty-mark">策</div>
+      <h2>还没有生成候选策略集</h2>
+      <p class="muted small">请先返回流程 AI 化页面，载入 Case A、复核每一步分工，并确认生成成果。</p>
+      <a class="button-link primary" href="./index.html">返回流程 AI 化</a>
+    </section>
+
+    <section id="content" class="content" hidden>
+      <div class="result-head">
+        <div>
+          <div class="title-row"><span class="eyebrow">当前策略集</span><span id="set-status" class="status">—</span></div>
+          <h2 id="set-name">—</h2>
+          <p id="set-meta" class="muted small"></p>
+        </div>
+        <div class="actions"><a class="button-link" href="./index.html">调整 Workflow</a><button id="download" type="button">下载策略集 JSON</button></div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><strong id="stat-total">—</strong><span>候选策略</span></div>
+        <div class="stat"><strong id="stat-ready">—</strong><span>基础候选</span></div>
+        <div class="stat"><strong id="stat-open">—</strong><span>待补条件策略</span></div>
+        <div class="stat"><strong id="stat-pilot">—</strong><span>可进入试用</span></div>
+        <div class="stat"><strong id="stat-data">—</strong><span>支撑数据步骤</span></div>
+        <div class="stat"><strong id="stat-items">—</strong><span>待确认事项</span></div>
+      </div>
+
+      <section class="panel maturity" aria-label="策略成熟度">
+        <div class="stage done"><strong>1 · Workflow 已复核</strong><span class="small">业务分工已经人工确认</span></div>
+        <div id="stage-2" class="stage current"><strong>2 · 候选策略待补条件</strong><span class="small">当前所处阶段</span></div>
+        <div id="stage-3" class="stage"><strong>3 · 小范围试用与正式审批</strong><span class="small">条件通过后进入</span></div>
+      </section>
+
+      <section class="panel boundary">
+        <div><h3>当前使用边界</h3><p id="boundary-notice" class="muted small"></p></div>
+        <div><strong class="small">下一步</strong><p id="next-action" class="muted small"></p></div>
+      </section>
+
+      <div id="strategy-grid" class="strategy-grid"></div>
+    </section>
+  </main>
+
+  <script>
+    let currentStrategySet = null;
+    const $ = selector => document.querySelector(selector);
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
+    }
+    function showError(message) {
+      const box = $("#error");
+      box.textContent = message || "";
+      box.hidden = !message;
+    }
+    function tags(values, extraClass = "") {
+      return values.map(value => `<span class="tag ${extraClass}">${escapeHtml(value)}</span>`).join("");
+    }
+    function renderCard(card) {
+      const article = document.createElement("article");
+      article.className = "panel strategy-card";
+      const openItems = card.openItems.map(item => `<li>${escapeHtml(item)}</li>`).join("");
+      const sources = card.sourceSteps.map(step => `<li><strong>${escapeHtml(step.stepId)}</strong> · ${escapeHtml(step.description)}</li>`).join("");
+      article.innerHTML = `
+        <div class="card-head">
+          <div><span class="eyebrow">${escapeHtml(card.strategyType)} · ${escapeHtml(card.strategyId)}</span><h3>${escapeHtml(card.strategyName)}</h3></div>
+          <span class="card-status ${escapeHtml(card.status)}">${escapeHtml(card.statusLabel)}</span>
+        </div>
+        <p class="purpose small">${escapeHtml(card.businessPurpose)}</p>
+        <div class="detail-grid">
+          <div class="detail"><strong>什么时候触发</strong><p class="small">${escapeHtml(card.triggerCondition)}</p></div>
+          <div class="detail"><strong>策略动作</strong><p class="small">${escapeHtml(card.recommendedAction)}</p></div>
+        </div>
+        <div><div class="section-label">建议适用标签</div><div class="tag-row">${tags(card.applicableScope.suggestedLabels)}</div></div>
+        <div><div class="section-label">效果指标</div><div class="tag-row">${tags(card.successMetrics, "metric")}</div></div>
+        <div><div class="section-label">进入正式策略前待确认</div><ul class="open-items">${openItems}</ul></div>
+        <div class="governance"><p class="small"><strong>责任人：</strong>${escapeHtml(card.owner)}　<strong>风险：</strong>${escapeHtml(card.riskLevel)}　<strong>版本：</strong>${escapeHtml(card.version)}</p><p class="muted small">${escapeHtml(card.governance.promotionRule)}</p></div>
+        <details><summary>查看来源业务步骤</summary><ul class="sources">${sources}</ul></details>`;
+      return article;
+    }
+    function render(strategySet) {
+      currentStrategySet = strategySet;
+      $("#empty").hidden = true;
+      $("#content").hidden = false;
+      const pilotReady = strategySet.status === "pilot_ready";
+      $("#set-status").className = `status ${escapeHtml(strategySet.status)}`;
+      $("#set-status").textContent = strategySet.statusLabel;
+      $("#set-name").textContent = strategySet.strategySetName;
+      $("#set-meta").textContent = `${strategySet.strategySetId} · ${strategySet.version} · Workflow 复核人：${strategySet.sourceCase.workflowReview.reviewedBy}`;
+      $("#stat-total").textContent = strategySet.summary.totalStrategies;
+      $("#stat-ready").textContent = strategySet.summary.candidateCount;
+      $("#stat-open").textContent = strategySet.summary.needsDefinitionCount;
+      $("#stat-pilot").textContent = strategySet.summary.pilotReadyCount || 0;
+      $("#stat-data").textContent = strategySet.summary.supportingDataStepCount;
+      $("#stat-items").textContent = strategySet.summary.openItemCount;
+      $("#boundary-notice").textContent = strategySet.boundaryNotice;
+      $("#next-action").textContent = strategySet.nextAction;
+      $("#stage-2").className = `stage ${pilotReady ? "done" : "current"}`;
+      $("#stage-2").querySelector("span").textContent = pilotReady ? "业务条件已经补齐" : "当前所处阶段";
+      $("#stage-3").className = `stage ${pilotReady ? "current" : ""}`;
+      $("#stage-3").querySelector("span").textContent = pilotReady ? "当前可进入受控试用" : "条件通过后进入";
+      const grid = $("#strategy-grid");
+      grid.replaceChildren(...strategySet.strategyCards.map(renderCard));
+    }
+    async function loadCurrent() {
+      showError("");
+      try {
+        const saved = localStorage.getItem("revenueWorkflowStrategySet");
+        if (saved) {
+          render(JSON.parse(saved));
+          return;
+        }
+      } catch (_error) {
+        // Fall back to the API when local storage is unavailable or invalid.
+      }
+      try {
+        const response = await fetch("./data/strategy-set.json", {cache: "no-store"});
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "策略集读取失败");
+        const strategySet = data.strategySet || data;
+        if (!strategySet) {
+          $("#content").hidden = true;
+          $("#empty").hidden = false;
+          return;
+        }
+        render(strategySet);
+      } catch (error) {
+        showError(error.message || String(error));
+      }
+    }
+    function download() {
+      if (!currentStrategySet) return;
+      const blob = new Blob([JSON.stringify(currentStrategySet, null, 2)], {type: "application/json"});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "revenue-candidate-strategy-set.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+    $("#download").addEventListener("click", download);
+    loadCurrent();
+  </script>
+</body>
+</html>
