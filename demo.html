@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Revenue Workflow AI Factory · 比赛导览</title>
+  <title>酒店收益策略中枢 · 比赛导览</title>
   <style>
     :root {
       color-scheme: light;
@@ -109,6 +109,24 @@
     .metric strong { font-size: 2rem; line-height: 1.15; }
     .metric span { color: var(--muted); font-size: .79rem; }
     .metric small { color: var(--blue); font-weight: 750; }
+    .runtime-proof { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(250px, .72fr); gap: 0; overflow: hidden; border-top: 5px solid var(--green); }
+    .runtime-main { display: grid; gap: 18px; padding: 27px; }
+    .runtime-top { display: flex; align-items: start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .verified-pill { display: inline-flex; padding: 6px 10px; color: var(--green); background: var(--green-soft); border-radius: 999px; font-size: .75rem; font-weight: 850; }
+    .runtime-main h3 { margin-top: 7px; font-size: 1.2rem; }
+    .runtime-main p { color: var(--muted); font-size: .84rem; }
+    .runtime-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .runtime-metric { padding: 13px; background: var(--soft); border-radius: 11px; }
+    .runtime-metric strong { display: block; font-size: 1.35rem; }
+    .runtime-metric span { color: var(--muted); font-size: .72rem; }
+    .runtime-chain { padding: 13px 15px; overflow-wrap: anywhere; color: var(--navy); background: var(--blue-soft); border-radius: 11px; font: 700 .76rem/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .runtime-side { display: grid; align-content: start; gap: 14px; padding: 27px; background: var(--soft); border-left: 1px solid var(--line); }
+    .decision-code { display: grid; gap: 8px; padding: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 11px; font: .76rem/1.45 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .decision-code b { color: var(--green); }
+    .runtime-limit { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 8px; color: var(--muted); font-size: .76rem; }
+    .runtime-limit b { color: var(--amber); }
+    .runtime-proof code { color: var(--navy); font: 700 .96em ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .evidence-link { display: inline-flex; width: fit-content; padding: 8px 11px; color: var(--navy); background: var(--blue-soft); border-radius: 9px; font-size: .78rem; font-weight: 850; }
     .gate-story { display: grid; grid-template-columns: 1fr minmax(190px, .44fr) 1fr; gap: 14px; align-items: stretch; }
     .gate-card { display: grid; align-content: start; gap: 14px; padding: 25px; }
     .status-pill { display: inline-flex; align-items: center; width: fit-content; padding: 6px 10px; border-radius: 999px; font-size: .76rem; font-weight: 850; }
@@ -161,7 +179,8 @@
     .loading { animation: pulse 1.1s ease-in-out infinite alternate; }
     @keyframes pulse { from { opacity: .45; } to { opacity: 1; } }
     @media (max-width: 980px) {
-      .hero, .demo-grid { grid-template-columns: 1fr; }
+      .hero, .demo-grid, .runtime-proof { grid-template-columns: 1fr; }
+      .runtime-side { border-top: 1px solid var(--line); border-left: 0; }
       .hero-proof { grid-template-columns: repeat(3, 1fr); }
       .proof-card { grid-template-columns: 1fr; }
       .flow { grid-template-columns: repeat(4, 1fr); }
@@ -186,7 +205,7 @@
     @media (max-width: 500px) {
       main { width: min(100% - 20px, 1200px); margin-top: 12px; }
       .hero { min-height: 0; padding: 25px 20px; border-radius: 19px; }
-      .metric-grid, .value-grid, .check-grid { grid-template-columns: 1fr; }
+      .metric-grid, .value-grid, .check-grid, .runtime-metrics { grid-template-columns: 1fr; }
       .flow { grid-template-columns: 1fr; }
       .flow-step { min-height: 0; }
       .hero-actions, .hero-actions .button { width: 100%; }
@@ -197,7 +216,7 @@
   <header class="app-header">
     <div class="brand">
       <div class="logo" aria-hidden="true">AI</div>
-      <div><h1>Revenue Workflow AI Factory</h1><p>酒旅收益业务流程 AI 化工具</p></div>
+      <div><h1>酒店收益策略中枢</h1><p>Revenue Strategy Hub</p></div>
     </div>
     <div class="header-actions">
       <nav class="nav" aria-label="产品导航"><a class="active" href="./demo.html">比赛导览</a><a href="./index.html">流程 AI 化</a><a href="./strategies.html">策略集</a><a href="./pricing-knowledge.html">L1–L3 知识</a><a href="./validator.html">质量门禁</a></nav>
@@ -260,6 +279,37 @@
         <div class="flow-step"><div class="flow-no">05</div><strong>候选策略集</strong><p>泛化为可管理的策略卡</p></div>
         <div class="flow-step"><div class="flow-no">06</div><strong>质量门禁</strong><p>条件不全即阻断试用</p></div>
         <div class="flow-step"><div class="flow-no">07</div><strong>补齐再送检</strong><p>阈值与权限完整后才 PASS</p></div>
+      </div>
+    </section>
+
+    <section id="runtime-evidence" class="section">
+      <div class="section-head">
+        <div><span class="eyebrow">Real cockpit integration</span><h2>不止是策略 Demo：已接入真实收益经理驾驶舱</h2></div>
+        <p class="muted small">以下证明的是端到端工作流已跑通，不代表决策质量或收益效果已验证。</p>
+      </div>
+      <div class="runtime-proof panel">
+        <div class="runtime-main">
+          <div class="runtime-top">
+            <div><span class="verified-pill">✓ MVP 集成已验证 · 2026-08-26</span><h3>CASE_B_CANCELLATION_V1 真实驾驶舱闭环</h3></div>
+            <a class="evidence-link" href="https://github.com/wildpig622/revenue-workflow-ai-factory-demo/blob/main/evidence/CASE_B_CANCELLATION_V1_INTEGRATION_2026-08-26.md" target="_blank" rel="noreferrer">查看脱敏证据</a>
+          </div>
+          <p>从真实经营 <code>order_log</code> 读取取消事件，经 Context Builder 和 <code>run_case_b()</code> 生成 Decision，再进入既有 RiskAlert 与 Human Gate；确认后形成可追溯的 <code>strategy_case</code> 动作记录。</p>
+          <div class="runtime-metrics">
+            <div class="runtime-metric"><strong>3</strong><span>真实取消事件</span></div>
+            <div class="runtime-metric"><strong>3 / 3</strong><span>Decision 成功落库并生成待办</span></div>
+            <div class="runtime-metric"><strong>已成功</strong><span>Human Gate 确认与 strategy_case 回写</span></div>
+          </div>
+          <div class="runtime-chain">order_log → Context Builder → run_case_b() → Decision → decision_log + todo_items → RiskAlert → Human Gate → strategy_case</div>
+        </div>
+        <aside class="runtime-side">
+          <div><span class="eyebrow">Representative result</span><h3>本次 3 条样本结果</h3></div>
+          <div class="decision-code"><span>reason_code: <b>OBSERVATION_WINDOW_ACTIVE</b></span><span>action: <b>OBSERVE</b></span><span>data_quality: <b>DEGRADED</b></span></div>
+          <div class="runtime-limit"><b>✓</b><span>Integration / end-to-end workflow 已验证</span></div>
+          <div class="runtime-limit"><b>!</b><span>Decision quality 仍在验证中</span></div>
+          <div class="runtime-limit"><b>!</b><span><code>ops_snapshot</code> 上下文字段仍在补齐</span></div>
+          <div class="runtime-limit"><b>!</b><span>Observation 到期自动重评尚未完成</span></div>
+          <div class="runtime-limit"><b>!</b><span>Outcome effectiveness 尚未验证</span></div>
+        </aside>
       </div>
     </section>
 
@@ -328,7 +378,7 @@
             <div class="script-step"><div class="script-time">0:35</div><div><strong>打开“流程 AI 化”</strong><p>载入 Case A，展示 12 步业务过程如何拆成人机协作 Workflow，并由收益经理复核。</p></div></div>
             <div class="script-step"><div class="script-time">1:20</div><div><strong>展示候选策略集</strong><p>说明 12 步不是机械复制，而是归并成 6 张可追溯策略卡。</p></div></div>
             <div class="script-step"><div class="script-time">2:00</div><div><strong>完成 BLOCK → PASS</strong><p>先让门禁阻断，再补齐阈值、权限、价格底线和回滚，重新送检通过。</p></div></div>
-            <div class="script-step"><div class="script-time">2:45</div><div><strong>主动说清边界</strong><p>当前只支持受控小范围试用，不是自动调价系统；下一版才进入分群配置与效果追踪。</p></div></div>
+            <div class="script-step"><div class="script-time">2:45</div><div><strong>展示真实接入并说清边界</strong><p>Case B 已跑通真实驾驶舱 Human Gate；但决策质量、自动重评和收益效果仍需继续验证。</p></div></div>
           </div>
         </article>
         <aside class="boundary-card panel">
@@ -337,7 +387,7 @@
             <div class="boundary-item"><b>!</b><p>不声称已验证收益提升，也不展示虚构 ROI。</p></div>
             <div class="boundary-item"><b>!</b><p>PASS 不代表策略最优，只代表具备受控试用条件。</p></div>
             <div class="boundary-item"><b>!</b><p>不绕过收益经理，不直接连接后台自动调价。</p></div>
-            <div class="boundary-item"><b>!</b><p>不包含通用 Runtime、线上调度和自动学习闭环。</p></div>
+            <div class="boundary-item"><b>!</b><p>仅 Case B 完成受限 Runtime 集成；通用 Runtime 与 Observation 到期自动重评尚未完成。</p></div>
             <div class="boundary-item"><b>!</b><p id="remaining-gap">仍需补齐竞对数据来源与刷新机制。</p></div>
           </div>
         </aside>
@@ -347,7 +397,7 @@
     <section class="section">
       <div class="section-head"><div><span class="eyebrow">Roadmap</span><h2>从策略资产，到按门店持续学习</h2></div></div>
       <div class="roadmap panel">
-        <article class="road-stage current"><span class="road-badge">V1 · 当前 MVP</span><h3>经验结构化与质量门禁</h3><p>人工 Case → Workflow → 候选策略集 → 补齐条件 → 允许受控试用。</p></article>
+        <article class="road-stage current"><span class="road-badge">V1 · 当前 MVP</span><h3>策略资产与真实驾驶舱接入</h3><p>人工 Case → Workflow → 质量门禁；Case B 已完成真实数据、Human Gate 与动作记录的 MVP 集成。</p></article>
         <article class="road-stage"><span class="road-badge">V2 · 西安自用版</span><h3>城市复盘与策略参数化</h3><p>以城市周期复盘为入口，按商圈和门店标签匹配策略；困难店再下钻到单店 Case。</p></article>
         <article class="road-stage"><span class="road-badge">V3 · 多城市</span><h3>区域对比与证据学习</h3><p>同一策略模板配置不同城市参数包，比较效果并提出调整建议，仍由业务负责人审批。</p></article>
       </div>

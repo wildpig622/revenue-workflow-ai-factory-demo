@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>收益业务流程 AI 化分析</title>
+  <title>酒店收益策略中枢 · 流程 AI 化</title>
   <style>
     :root {
       color-scheme: light;
@@ -78,6 +78,12 @@
     .journey { display: grid; gap: 10px; }
     .journey-item { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: center; padding: 9px 10px; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.16); border-radius: 11px; }
     .journey-number { display: grid; place-items: center; width: 30px; height: 30px; color: #143c5c; background: #fff; border-radius: 50%; font-size: .78rem; font-weight: 800; }
+    .integration-strip { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; margin-bottom: 20px; padding: 15px 17px; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--green); border-radius: 14px; box-shadow: 0 10px 30px rgba(28, 48, 70, .06); }
+    .integration-mark { display: grid; place-items: center; width: 40px; height: 40px; color: var(--green); background: var(--green-bg); border-radius: 50%; font-weight: 900; }
+    .integration-copy { display: grid; gap: 3px; }
+    .integration-copy strong { font-size: .92rem; }
+    .integration-meta { color: var(--muted); font-size: .78rem; }
+    .integration-link { padding: 7px 10px; color: var(--navy); background: var(--navy-soft); border-radius: 9px; font-size: .78rem; font-weight: 800; }
     .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
     .input-panel { display: grid; grid-template-columns: minmax(0, 1fr) 255px; margin-bottom: 20px; }
     .editor { padding: 20px; }
@@ -171,7 +177,7 @@
     .loading::after { content: ""; width: 14px; height: 14px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     @media (max-width: 980px) { .hero, .input-panel, .main-grid, .review-panel { grid-template-columns: 1fr; } .readiness-grid { grid-template-columns: 1fr 1fr; } .input-side { border-left: 0; border-top: 1px solid var(--line); } .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    @media (max-width: 720px) { .app-header, .readiness-head, .readiness-actions { align-items: flex-start; flex-direction: column; } .header-actions { width: 100%; justify-content: space-between; } .hero { padding: 21px; } .editor-grid, .step-detail, .assignment-editor, .review-controls, .readiness-grid { grid-template-columns: 1fr; } .editor-head, .result-head { align-items: flex-start; flex-direction: column; } .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .actions { width: 100%; } .actions > * { flex: 1; } .readiness-actions button { width: 100%; } }
+    @media (max-width: 720px) { .app-header, .readiness-head, .readiness-actions { align-items: flex-start; flex-direction: column; } .header-actions { width: 100%; justify-content: space-between; } .hero { padding: 21px; } .integration-strip { grid-template-columns: auto minmax(0, 1fr); } .integration-link { grid-column: 1 / -1; text-align: center; } .editor-grid, .step-detail, .assignment-editor, .review-controls, .readiness-grid { grid-template-columns: 1fr; } .editor-head, .result-head { align-items: flex-start; flex-direction: column; } .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .actions { width: 100%; } .actions > * { flex: 1; } .readiness-actions button { width: 100%; } }
     @media (max-width: 460px) { main { width: min(100% - 20px, 1200px); } .stats { grid-template-columns: 1fr 1fr; } .step { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -179,11 +185,11 @@
   <header class="app-header">
     <div class="brand">
       <div class="logo" aria-hidden="true">AI</div>
-      <div><h1>Revenue Workflow AI Factory</h1><p>酒旅收益业务流程 AI 化工具</p></div>
+      <div><h1>酒店收益策略中枢</h1><p>Revenue Strategy Hub</p></div>
     </div>
     <div class="header-actions">
       <nav class="nav" aria-label="产品导航"><a href="./demo.html">比赛导览</a><a class="active" href="./index.html">流程 AI 化</a><a href="./strategies.html">策略集</a><a href="./pricing-knowledge.html">L1–L3 知识</a><a href="./validator.html">质量门禁</a></nav>
-      <span class="muted small">MVP v0.1</span>
+      <span class="muted small">MVP v0.2</span>
     </div>
   </header>
 
@@ -202,6 +208,15 @@
         <div class="journey-item"><span class="journey-number">5</span><strong>通过 Validator 拦截未确认风险</strong></div>
       </div>
     </section>
+
+    <aside class="integration-strip" aria-label="真实驾驶舱集成状态">
+      <span class="integration-mark" aria-hidden="true">✓</span>
+      <div class="integration-copy">
+        <strong>CASE_B 已完成真实经营数据 + 驾驶舱 Human Gate 的 MVP 集成验证</strong>
+        <span class="integration-meta">2026-08-26 · 3 条真实取消事件 · 3/3 Decision 落库 · Human Gate 与 strategy_case 回写成功 · 决策质量仍在验证</span>
+      </div>
+      <a class="integration-link" href="./demo.html#runtime-evidence">查看闭环证据</a>
+    </aside>
 
     <section class="panel input-panel">
       <div class="editor">
